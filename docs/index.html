@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>xclaw — Beyond the Boundary of Human and AI</title>
+  <meta name="description" content="xclaw — 超越人类与 AI 的边界。具有强烈个人品牌特色的 AI 编程 CLI 工具。">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --border: #262626;
+      --text: #e5e5e5;
+      --text-muted: #a3a3a3;
+      --accent: #D77757;
+      --accent-dim: #D7775733;
+      --teal: #2dd4bf;
+      --green: #4ade80;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    /* Language Switcher */
+    .lang-switch {
+      position: fixed;
+      top: 16px;
+      right: 24px;
+      z-index: 100;
+      display: flex;
+      gap: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px;
+    }
+    .lang-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 120px 0 80px;
+    }
+    .hero pre {
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: var(--accent);
+      line-height: 1.2;
+      margin-bottom: 32px;
+      display: inline-block;
+      text-align: left;
+    }
+    .hero h1 {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--teal));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero .tagline {
+      font-size: 20px;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+    .hero .tagline em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    /* Install */
+    .install-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 0 auto;
+      max-width: 520px;
+      text-align: left;
+    }
+    .install-box .label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .install-box code {
+      display: block;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: var(--green);
+      background: #0d1117;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    /* Features */
+    .features {
+      padding: 80px 0;
+    }
+    .features h2 {
+      font-size: 32px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: border-color 0.2s;
+    }
+    .feature-card:hover { border-color: var(--accent); }
+    .feature-card .icon { font-size: 24px; margin-bottom: 12px; }
+    .feature-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: var(--text-muted); }
+
+    /* Modes */
+    .modes {
+      padding: 80px 0;
+    }
+    .modes h2 {
+      font-size: 32px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .mode-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .mode-table th {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 2px solid var(--border);
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .mode-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mode-table tr:hover td { background: var(--surface); }
+    .mode-name {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Quick Start */
+    .quickstart {
+      padding: 80px 0;
+    }
+    .quickstart h2 {
+      font-size: 32px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .step .num {
+      font-size: 12px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .step h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .step p { font-size: 14px; color: var(--text-muted); }
+    .step code {
+      display: block;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: var(--green);
+      background: #0d1117;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 12px;
+      white-space: pre;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+    .links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 12px;
+    }
+
+    /* Hidden lang sections */
+    [data-lang] { display: none; }
+    [data-lang].show { display: block; }
+
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 32px; }
+      .hero pre { font-size: 10px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="lang-switch">
+  <button class="lang-btn active" onclick="switchLang('zh')">中文</button>
+  <button class="lang-btn" onclick="switchLang('en')">English</button>
+</div>
+
+<div class="container">
+  <!-- Hero -->
+  <section class="hero">
+    <pre> ██╗  ██╗ ██████╗██╗      █████╗ ██╗    ██╗
+ ╚██╗██╔╝██╔════╝██║     ██╔══██╗██║    ██║
+  ╚███╔╝ ██║     ██║     ███████║██║ █╗ ██║
+  ██╔██╗ ██║     ██║     ██╔══██║██║███╗██║
+ ██╔╝ ██╗╚██████╗███████╗██║  ██║╚███╔███╔╝
+ ╚═╝  ╚═╝ ╚═════╝╚══════╝╚═╝  ╚═╝ ╚══╝╚══╝</pre>
+    <div data-lang="zh" class="show">
+      <h1>xclaw</h1>
+      <p class="tagline"><em>超越人类与 AI 的边界</em> — AI 不只是服务你，你也要听从 AI 的建议。</p>
+    </div>
+    <div data-lang="en">
+      <h1>xclaw</h1>
+      <p class="tagline"><em>Beyond the Boundary of Human and AI</em> — AI doesn't just serve you, you should also listen to AI's advice.</p>
+    </div>
+    <div class="install-box">
+      <div class="label" data-lang="zh" class="show">快速安装</div>
+      <div class="label" data-lang="en">Quick Install</div>
+      <code>git clone https://github.com/YuanyuanMa03/xclaw.git
+cd xclaw && ./scripts/install-from-source-mac.sh</code>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div data-lang="zh" class="show">
+      <h2>特性</h2>
+    </div>
+    <div data-lang="en">
+      <h2>Features</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="icon">⚡</div>
+        <div data-lang="zh" class="show">
+          <h3>模式系统</h3>
+          <p>6 种内置模式，每种模式切换性格、工具、UI、权限。支持自定义 YAML 模式。</p>
+        </div>
+        <div data-lang="en">
+          <h3>Mode System</h3>
+          <p>6 built-in modes, each switching personality, tools, UI, and permissions. Custom YAML modes supported.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔪</div>
+        <div data-lang="zh" class="show">
+          <h3>Dr. Sharp</h3>
+          <p>内置人生教练人格，三阶段心理分析工作流。用手术刀般精准的方式审视你的代码和决策。</p>
+        </div>
+        <div data-lang="en">
+          <h3>Dr. Sharp</h3>
+          <p>Built-in life coach persona with a 3-stage psychological analysis workflow.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📋</div>
+        <div data-lang="zh" class="show">
+          <h3>代码问责</h3>
+          <p>AI 修改代码后强制展示 diff 并追问修改理由，记录决策日志。</p>
+        </div>
+        <div data-lang="en">
+          <h3>Code Accountability</h3>
+          <p>Force-show diff after AI edits, ask for modification reasons, log decisions.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔌</div>
+        <div data-lang="zh" class="show">
+          <h3>多模型供应商</h3>
+          <p>支持 Anthropic/OpenAI/Gemini/Grok 等 7 个 API 提供商。</p>
+        </div>
+        <div data-lang="en">
+          <h3>Multi-API Providers</h3>
+          <p>Support 7 API providers: Anthropic, OpenAI, Gemini, Grok, Bedrock, Vertex, Foundry.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🖥️</div>
+        <div data-lang="zh" class="show">
+          <h3>Computer Use</h3>
+          <p>屏幕截图、键鼠控制。Chrome 浏览器自动化、表单填写、数据抓取。</p>
+        </div>
+        <div data-lang="en">
+          <h3>Computer Use</h3>
+          <p>Screen capture, keyboard/mouse control. Chrome browser automation and data scraping.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="icon">💰</div>
+        <div data-lang="zh" class="show">
+          <h3>穷鬼模式</h3>
+          <p>省 Token 模式，关闭记忆提取和键入建议，显著减少消耗。</p>
+        </div>
+        <div data-lang="en">
+          <h3>Budget Mode</h3>
+          <p>Token-saving mode — disable memory extraction and input suggestions to reduce costs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modes -->
+  <section class="modes">
+    <div data-lang="zh" class="show">
+      <h2>模式系统</h2>
+    </div>
+    <div data-lang="en">
+      <h2>Mode System</h2>
+    </div>
+    <table class="mode-table">
+      <thead>
+        <tr>
+          <div data-lang="zh" class="show"><th>模式</th><th>性格</th><th>权限</th></div>
+          <div data-lang="en"><th>Mode</th><th>Personality</th><th>Permissions</th></div>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="mode-name">&#x26A1; Default</span></td>
+          <div data-lang="zh" class="show"><td>专业、平衡</td><td>标准</td></div>
+          <div data-lang="en"><td>Professional, balanced</td><td>Standard</td></div>
+        </tr>
+        <tr>
+          <td><span class="mode-name">&#x1F338; Gentle</span></td>
+          <div data-lang="zh" class="show"><td>耐心、鼓励</td><td>标准</td></div>
+          <div data-lang="en"><td>Patient, encouraging</td><td>Standard</td></div>
+        </tr>
+        <tr>
+          <td><span class="mode-name">&#x1F535; Dr. Sharp</span></td>
+          <div data-lang="zh" class="show"><td>心理手术刀，三阶段分析</td><td>标准</td></div>
+          <div data-lang="en"><td>Psychological scalpel, 3-stage analysis</td><td>Standard</td></div>
+        </tr>
+        <tr>
+          <td><span class="mode-name">&#x1F40E; Workhorse</span></td>
+          <div data-lang="zh" class="show"><td>高效、零废话</td><td>自动批准文件操作</td></div>
+          <div data-lang="en"><td>Efficient, zero fluff</td><td>Auto-approve file ops</td></div>
+        </tr>
+        <tr>
+          <td><span class="mode-name">&#x1F4B0; Token Saver</span></td>
+          <div data-lang="zh" class="show"><td>简洁、精准</td><td>自动批准</td></div>
+          <div data-lang="en"><td>Concise, precise</td><td>Auto-approve</td></div>
+        </tr>
+        <tr>
+          <td><span class="mode-name">&#x1F9E0; Super AI</span></td>
+          <div data-lang="zh" class="show"><td>全能、主动</td><td>全部自动批准</td></div>
+          <div data-lang="en"><td>All-powerful, proactive</td><td>Approve everything</td></div>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Quick Start -->
+  <section class="quickstart">
+    <div data-lang="zh" class="show">
+      <h2>快速开始</h2>
+    </div>
+    <div data-lang="en">
+      <h2>Quick Start</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div data-lang="zh" class="show">
+          <div class="num">第一步</div>
+          <h3>安装</h3>
+          <p>克隆仓库并运行安装脚本</p>
+        </div>
+        <div data-lang="en">
+          <div class="num">Step 1</div>
+          <h3>Install</h3>
+          <p>Clone and run the installer</p>
+        </div>
+        <code>./scripts/install-from-source-mac.sh</code>
+      </div>
+      <div class="step">
+        <div data-lang="zh" class="show">
+          <div class="num">第二步</div>
+          <h3>配置 API</h3>
+          <p>启动后输入 /login 配置你的 API</p>
+        </div>
+        <div data-lang="en">
+          <div class="num">Step 2</div>
+          <h3>Configure API</h3>
+          <p>Run /login to set up your API</p>
+        </div>
+        <code>xclaw
+/login</code>
+      </div>
+      <div class="step">
+        <div data-lang="zh" class="show">
+          <div class="num">第三步</div>
+          <h3>开始协作</h3>
+          <p>选择模式，与 AI 平等对话</p>
+        </div>
+        <div data-lang="en">
+          <div class="num">Step 3</div>
+          <h3>Start Collaborating</h3>
+          <p>Pick a mode and talk to AI as an equal</p>
+        </div>
+        <code>/mode sharp
+Ctrl+M to cycle modes</code>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div data-lang="zh" class="show">
+    <p>xclaw — 超越人类与 AI 的边界</p>
+  </div>
+  <div data-lang="en">
+    <p>xclaw — Beyond the Boundary of Human and AI</p>
+  </div>
+  <div class="links">
+    <a href="https://github.com/YuanyuanMa03/xclaw">GitHub</a>
+    <a href="https://github.com/YuanyuanMa03/xclaw/releases">Releases</a>
+    <a href="https://github.com/YuanyuanMa03/xclaw/issues">Issues</a>
+  </div>
+</footer>
+
+<script>
+function switchLang(lang) {
+  document.querySelectorAll('[data-lang]').forEach(el => {
+    el.classList.toggle('show', el.dataset.lang === lang);
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim() === (lang === 'zh' ? '中文' : 'English'));
+  });
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+}
+</script>
+</body>
+</html>
