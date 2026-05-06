@@ -295,6 +295,25 @@ rm -rf ~/.xclaw                     # xclaw 专用配置
 - **包管理**: Bun workspaces (monorepo, 15+ packages)
 - **Lint**: Biome
 
+## 致谢与技术来源
+
+xclaw 是一个站在巨人肩膀上的项目，我们对此保持坦诚。
+
+**核心引擎** 的底层架构大量借鉴和参考了 [Claude Code](https://github.com/anthropics/claude-code)（Anthropic 官方开源）的实现——包括 Agent Loop、Tool System、Provider Layer、Permission System、Compact/Memory 等核心机制。我们并非从零构建了这些基础设施，而是基于其开源代码进行了深度定制和改造。
+
+**但同时**，xclaw 在此基础上注入了大量原创的思考和设计：
+
+- **模式系统** — 6 种人格模式（温柔/犀利/代码牛马/省 Token/超级 AI/Dr. Sharp），每种模式切换性格、工具集、权限和 UI 风格，这在原版中并不存在
+- **Dr. Sharp 心理分析工作流** — 三阶段认知手术（深度诊断 → 行动策略 → 镜像自我），将心理学分析框架注入 AI 交互
+- **代码问责面板** — AI 修改代码后强制展示 diff 并追问理由，记录决策日志
+- **多供应商统一抽象** — 在 Anthropic 原生架构上扩展了 OpenAI/Gemini/Grok 等多供应商支持
+- **Voice Mode / Computer Use / Chrome Use / Remote Control / Web Search** — 在原版基础上新增的交互能力
+- **WeChat 集成** — 基于微信生态的 agent 通信层
+
+我们深知，承认借鉴并不丢人——丢人的是假装一切从零开始。开源的精神在于诚实、尊重和共同进步。感谢 Anthropic 团队开源了如此优秀的 Claude Code，让我们能在此基础上探索 AI Agent 的更多可能性。
+
+如果你也在做类似的项目，欢迎交流。我们相信，**人机协作的边界，需要更多人一起去探索**。
+
 ## 许可证
 
-本项目仅供学习研究用途。
+[MIT](LICENSE)
