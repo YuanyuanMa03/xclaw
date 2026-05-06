@@ -5,493 +5,434 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>xclaw — Beyond the Boundary of Human and AI</title>
   <meta name="description" content="xclaw — 超越人类与 AI 的边界。具有强烈个人品牌特色的 AI 编程 CLI 工具。">
-  <style>
-    :root {
-      --bg: #0a0a0a;
-      --surface: #141414;
-      --border: #262626;
-      --text: #e5e5e5;
-      --text-muted: #a3a3a3;
-      --accent: #D77757;
-      --accent-dim: #D7775733;
-      --teal: #2dd4bf;
-      --green: #4ade80;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+  <meta property="og:title" content="xclaw — AI Programming CLI">
+  <meta property="og:description" content="超越人类与 AI 的边界。不只是工具，是协作伙伴。">
+  <meta property="og:url" content="https://yuanyuanma03.github.io/xclaw/">
 
-    /* Language Switcher */
-    .lang-switch {
-      position: fixed;
-      top: 16px;
-      right: 24px;
-      z-index: 100;
-      display: flex;
-      gap: 4px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 4px;
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23D97706'/><path d='M12 10l10 6-10 6V10z' fill='white'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#06060c;--card:rgba(255,255,255,0.025);--card-h:rgba(255,255,255,0.05);
+      --bdr:rgba(255,255,255,0.06);--bdr-h:rgba(255,255,255,0.12);
+      --tx:#f0f0ff;--tx2:#9999bb;--tx3:#555577;
+      --amber:#f59e0b;--amber-g:rgba(245,158,11,0.15);--amber-d:#d97706;
+      --neon:#00ffaa;--neon2:#7b61ff;--neon3:#ff4488;--cyan:#00e5ff;
+      --r:20px;--sans:'Space Grotesk',system-ui,sans-serif;
+      --mono:'JetBrains Mono',monospace;--display:'Syne','Space Grotesk',sans-serif;
     }
-    .lang-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      transition: all 0.2s;
-    }
-    .lang-btn.active {
-      background: var(--accent-dim);
-      color: var(--accent);
-    }
+    html{scroll-behavior:smooth}
+    body{font-family:var(--sans);background:var(--bg);color:var(--tx);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+
+    /* Canvas */
+    #bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+    .noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:256px}
+
+    .wrap{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:0 32px}
+
+    /* Nav */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);background:rgba(6,6,12,.7);border-bottom:1px solid var(--bdr)}
+    nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+    .logo{display:flex;align-items:center;gap:12px;font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--amber)}
+    .logo svg{width:32px;height:32px}
+    .nav-r{display:flex;align-items:center;gap:24px}
+    .nav-r a{color:var(--tx2);font-size:.88rem;font-weight:500;transition:color .2s}
+    .nav-r a:hover{color:var(--tx)}
+    .gh-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid var(--bdr);font-size:.85rem;font-weight:600;transition:all .2s}
+    .gh-btn:hover{border-color:var(--bdr-h);background:rgba(255,255,255,.08)}
 
     /* Hero */
-    .hero {
-      text-align: center;
-      padding: 120px 0 80px;
-    }
-    .hero pre {
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      color: var(--accent);
-      line-height: 1.2;
-      margin-bottom: 32px;
-      display: inline-block;
-      text-align: left;
-    }
-    .hero h1 {
-      font-size: 48px;
-      font-weight: 700;
-      letter-spacing: -1px;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, var(--accent), var(--teal));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero .tagline {
-      font-size: 20px;
-      color: var(--text-muted);
-      max-width: 600px;
-      margin: 0 auto 40px;
-    }
-    .hero .tagline em {
-      color: var(--accent);
-      font-style: normal;
-    }
+    .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:100px 0 60px;position:relative}
+    .hero-inner{max-width:860px}
+    .hero-ascii{font-family:var(--mono);font-size:clamp(.55rem,1.2vw,.8rem);color:var(--amber);line-height:1.3;margin-bottom:40px;opacity:.7;text-align:left;display:inline-block}
+    .hero h1{font-family:var(--display);font-size:clamp(2.8rem,6vw,4.5rem);font-weight:800;line-height:1.1;letter-spacing:-.04em;margin-bottom:16px}
+    .hero h1 .g{background:linear-gradient(135deg,var(--amber),#ff8a00,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero-sub{font-size:clamp(1.1rem,2vw,1.4rem);color:var(--tx2);max-width:600px;margin:0 auto 20px;font-weight:300}
+    .hero-sub em{color:var(--amber);font-style:normal;font-weight:600}
+    .hero-desc{font-size:.95rem;color:var(--tx3);margin-bottom:40px}
 
-    /* Install */
-    .install-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      margin: 0 auto;
-      max-width: 520px;
-      text-align: left;
-    }
-    .install-box .label {
-      font-size: 12px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-    .install-box code {
-      display: block;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      color: var(--green);
-      background: #0d1117;
-      padding: 16px;
-      border-radius: 8px;
-      overflow-x: auto;
-      white-space: pre;
-    }
+    /* Install block */
+    .install{display:inline-flex;flex-direction:column;align-items:stretch;text-align:left;background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.15);border-radius:16px;padding:24px 28px;margin-bottom:40px;min-width:min(500px,90vw)}
+    .install .lbl{font-family:var(--mono);font-size:.72rem;color:var(--amber);text-transform:uppercase;letter-spacing:.15em;margin-bottom:12px}
+    .install-row{display:flex;align-items:center;gap:12px}
+    .install code{flex:1;font-family:var(--mono);font-size:.88rem;color:var(--neon);background:rgba(0,0,0,.4);padding:14px 18px;border-radius:10px;white-space:nowrap;overflow-x:auto}
+    .copy-btn{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);color:var(--amber);font-family:var(--mono);font-size:.78rem;padding:10px 16px;border-radius:8px;cursor:pointer;transition:all .2s;white-space:nowrap}
+    .copy-btn:hover{background:rgba(245,158,11,.2)}
+    .copy-btn.copied{color:var(--neon);border-color:rgba(0,255,170,.3);background:rgba(0,255,170,.08)}
 
-    /* Features */
-    .features {
-      padding: 80px 0;
-    }
-    .features h2 {
-      font-size: 32px;
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 48px;
-    }
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-    }
-    .feature-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      transition: border-color 0.2s;
-    }
-    .feature-card:hover { border-color: var(--accent); }
-    .feature-card .icon { font-size: 24px; margin-bottom: 12px; }
-    .feature-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-    .feature-card p { font-size: 14px; color: var(--text-muted); }
+    .hero-cta{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:32px}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:14px;font-weight:600;font-size:.95rem;cursor:pointer;border:none;transition:all .3s;font-family:var(--sans)}
+    .btn-amber{background:linear-gradient(135deg,var(--amber),#ff8a00);color:#06060c;box-shadow:0 0 30px rgba(245,158,11,.2),0 4px 20px rgba(245,158,11,.1)}
+    .btn-amber:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(245,158,11,.3),0 8px 30px rgba(245,158,11,.15)}
+    .btn-ghost{background:transparent;color:var(--tx);border:1px solid var(--bdr-h)}
+    .btn-ghost:hover{border-color:var(--neon2);background:rgba(123,97,255,.06);transform:translateY(-3px)}
+
+    /* Badges row */
+    .badges{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+    .badge{font-family:var(--mono);font-size:.72rem;padding:5px 14px;border-radius:100px;border:1px solid var(--bdr);color:var(--tx2);background:var(--card)}
+    .badge b{color:var(--amber)}
+
+    /* Sections */
+    section{padding:120px 0}
+    .sec-lbl{font-family:var(--mono);font-size:.82rem;color:var(--amber);font-weight:600;text-transform:uppercase;letter-spacing:.18em;margin-bottom:12px}
+    .sec-title{font-family:var(--display);font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-.03em;margin-bottom:16px}
+    .sec-desc{font-size:1.05rem;color:var(--tx2);max-width:600px;margin-bottom:56px;line-height:1.8}
+
+    /* Feature Grid */
+    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .feat{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:32px 28px;transition:all .4s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+    .feat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:0;transition:opacity .4s}
+    .feat:hover{border-color:var(--bdr-h);background:var(--card-h);transform:translateY(-5px);box-shadow:0 16px 50px rgba(0,0,0,.3)}
+    .feat:hover::before{opacity:1}
+    .feat-ico{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:20px}
+    .feat h3{font-size:1.1rem;font-weight:700;margin-bottom:8px}
+    .feat p{font-size:.85rem;color:var(--tx2);line-height:1.7}
 
     /* Modes */
-    .modes {
-      padding: 80px 0;
-    }
-    .modes h2 {
-      font-size: 32px;
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 48px;
-    }
-    .mode-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-    .mode-table th {
-      text-align: left;
-      padding: 12px 16px;
-      border-bottom: 2px solid var(--border);
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-    .mode-table td {
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .mode-table tr:hover td { background: var(--surface); }
-    .mode-name {
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .modes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .mode{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:28px;transition:all .3s}
+    .mode:hover{border-color:var(--bdr-h);transform:translateY(-3px)}
+    .mode-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .mode-emoji{font-size:1.6rem}
+    .mode-name{font-weight:700;font-size:1.05rem}
+    .mode-tag{font-family:var(--mono);font-size:.68rem;padding:3px 10px;border-radius:6px;margin-left:auto}
+    .mode p{font-size:.85rem;color:var(--tx2);line-height:1.7}
 
-    /* Quick Start */
-    .quickstart {
-      padding: 80px 0;
-    }
-    .quickstart h2 {
-      font-size: 32px;
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 48px;
-    }
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 24px;
-    }
-    .step {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-    }
-    .step .num {
-      font-size: 12px;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-    .step h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-    .step p { font-size: 14px; color: var(--text-muted); }
-    .step code {
-      display: block;
-      font-family: 'Courier New', monospace;
-      font-size: 13px;
-      color: var(--green);
-      background: #0d1117;
-      padding: 12px;
-      border-radius: 6px;
-      margin-top: 12px;
-      white-space: pre;
-    }
+    /* Architecture */
+    .arch{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:48px;text-align:center;overflow:hidden;position:relative}
+    .arch-layers{display:flex;flex-direction:column;gap:2px;max-width:600px;margin:0 auto}
+    .arch-layer{display:flex;align-items:center;gap:16px;padding:16px 24px;border-radius:12px;text-align:left;transition:all .3s}
+    .arch-layer:hover{transform:scale(1.02)}
+    .arch-layer .al-ico{font-size:1.4rem;width:40px;text-align:center}
+    .arch-layer .al-name{font-weight:600;font-size:.95rem}
+    .arch-layer .al-desc{font-size:.78rem;color:var(--tx3)}
+    .arch-layer:nth-child(1){background:rgba(245,158,11,.08)}
+    .arch-layer:nth-child(2){background:rgba(0,255,170,.06)}
+    .arch-layer:nth-child(3){background:rgba(123,97,255,.06)}
+    .arch-layer:nth-child(4){background:rgba(0,229,255,.06)}
+    .arch-layer:nth-child(5){background:rgba(255,68,136,.06)}
+
+    /* Steps */
+    .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .step{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:36px;position:relative}
+    .step-num{font-family:var(--display);font-size:3rem;font-weight:800;background:linear-gradient(135deg,var(--amber),#ff8a00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:.3;position:absolute;top:20px;right:24px}
+    .step h3{font-size:1.1rem;font-weight:700;margin-bottom:8px}
+    .step p{font-size:.85rem;color:var(--tx2);margin-bottom:16px;line-height:1.7}
+    .step code{display:block;font-family:var(--mono);font-size:.82rem;color:var(--neon);background:rgba(0,0,0,.3);padding:14px;border-radius:10px;white-space:pre;overflow-x:auto}
 
     /* Footer */
-    footer {
-      text-align: center;
-      padding: 48px 0;
-      border-top: 1px solid var(--border);
-      color: var(--text-muted);
-      font-size: 14px;
-    }
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-    footer a:hover { text-decoration: underline; }
-    .links {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      margin-top: 12px;
-    }
+    footer{border-top:1px solid var(--bdr);padding:48px 0;text-align:center}
+    footer p{color:var(--tx3);font-size:.85rem}
+    footer .amber{color:var(--amber)}
+    .footer-links{display:flex;justify-content:center;gap:32px;margin-top:16px}
+    .footer-links a{color:var(--tx2);font-size:.85rem;transition:color .2s}
+    .footer-links a:hover{color:var(--amber)}
 
-    /* Hidden lang sections */
-    [data-lang] { display: none; }
-    [data-lang].show { display: block; }
+    /* Fade */
+    .fu{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s cubic-bezier(.4,0,.2,1)}
+    .fu.v{opacity:1;transform:translateY(0)}
+    .fu:nth-child(2){transition-delay:.1s}
+    .fu:nth-child(3){transition-delay:.2s}
 
-    @media (max-width: 640px) {
-      .hero h1 { font-size: 32px; }
-      .hero pre { font-size: 10px; }
-      .feature-grid { grid-template-columns: 1fr; }
-      .steps { grid-template-columns: 1fr; }
+    @media(max-width:960px){
+      .feat-grid,.modes-grid,.steps-grid{grid-template-columns:1fr}
+      .hero-ascii{font-size:.5rem}
+      .nav-r a{display:none}
     }
+    @media(max-width:600px){.wrap{padding:0 20px}section{padding:80px 0}}
   </style>
 </head>
 <body>
+  <canvas id="bg"></canvas>
+  <div class="noise"></div>
 
-<div class="lang-switch">
-  <button class="lang-btn active" onclick="switchLang('zh')">中文</button>
-  <button class="lang-btn" onclick="switchLang('en')">English</button>
-</div>
+  <nav>
+    <div class="wrap">
+      <a href="#" class="logo">
+        <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" fill="#D97706"/><path d="M12 10l10 6-10 6V10z" fill="#FFF"/></svg>
+        xclaw
+      </a>
+      <div class="nav-r">
+        <a href="#features">Features</a>
+        <a href="#modes">Modes</a>
+        <a href="#install">Install</a>
+        <a href="https://github.com/YuanyuanMa03/xclaw" target="_blank" class="gh-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </nav>
 
-<div class="container">
   <!-- Hero -->
   <section class="hero">
-    <pre> ██╗  ██╗ ██████╗██╗      █████╗ ██╗    ██╗
+    <div class="wrap">
+      <div class="hero-inner">
+        <pre class="hero-ascii"> ██╗  ██╗ ██████╗██╗      █████╗ ██╗    ██╗
  ╚██╗██╔╝██╔════╝██║     ██╔══██╗██║    ██║
   ╚███╔╝ ██║     ██║     ███████║██║ █╗ ██║
   ██╔██╗ ██║     ██║     ██╔══██║██║███╗██║
  ██╔╝ ██╗╚██████╗███████╗██║  ██║╚███╔███╔╝
  ╚═╝  ╚═╝ ╚═════╝╚══════╝╚═╝  ╚═╝ ╚══╝╚══╝</pre>
-    <div data-lang="zh" class="show">
-      <h1>xclaw</h1>
-      <p class="tagline"><em>超越人类与 AI 的边界</em> — AI 不只是服务你，你也要听从 AI 的建议。</p>
-    </div>
-    <div data-lang="en">
-      <h1>xclaw</h1>
-      <p class="tagline"><em>Beyond the Boundary of Human and AI</em> — AI doesn't just serve you, you should also listen to AI's advice.</p>
-    </div>
-    <div class="install-box">
-      <div class="label" data-lang="zh" class="show">快速安装</div>
-      <div class="label" data-lang="en">Quick Install</div>
-      <code>git clone https://github.com/YuanyuanMa03/xclaw.git
-cd xclaw && ./scripts/install-from-source-mac.sh</code>
+
+        <h1>Beyond the Boundary of<br><span class="g">Human and AI</span></h1>
+        <p class="hero-sub">AI 不只是服务你，<em>你也要听从 AI 的建议</em></p>
+        <p class="hero-desc">具有强烈个人品牌特色的 AI 编程 CLI — 它不只是工具，是你的协作伙伴</p>
+
+        <div class="badges">
+          <span class="badge">v<b>1.0.0</b></span>
+          <span class="badge">TypeScript + Bun</span>
+          <span class="badge"><b>7</b> API Providers</span>
+          <span class="badge"><b>6</b> Built-in Modes</span>
+          <span class="badge">Agent Loop</span>
+        </div>
+
+        <div class="install">
+          <div class="lbl">⚡ Quick Install</div>
+          <div class="install-row">
+            <code id="install-cmd">bash <(curl -fsSL https://raw.githubusercontent.com/YuanyuanMa03/xclaw/main/scripts/install.sh)</code>
+            <button class="copy-btn" onclick="copyInstall()">Copy</button>
+          </div>
+        </div>
+
+        <div class="hero-cta">
+          <a href="#install" class="btn btn-amber">Get Started →</a>
+          <a href="#features" class="btn btn-ghost">Explore Features</a>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- Features -->
-  <section class="features">
-    <div data-lang="zh" class="show">
-      <h2>特性</h2>
-    </div>
-    <div data-lang="en">
-      <h2>Features</h2>
-    </div>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <div class="icon">⚡</div>
-        <div data-lang="zh" class="show">
-          <h3>模式系统</h3>
-          <p>6 种内置模式，每种模式切换性格、工具、UI、权限。支持自定义 YAML 模式。</p>
-        </div>
-        <div data-lang="en">
-          <h3>Mode System</h3>
-          <p>6 built-in modes, each switching personality, tools, UI, and permissions. Custom YAML modes supported.</p>
-        </div>
+  <section id="features">
+    <div class="wrap">
+      <div class="fu">
+        <p class="sec-lbl">// Features</p>
+        <h2 class="sec-title">不只是代码补全</h2>
+        <p class="sec-desc">xclaw 重新定义了人机协作 — AI 有权利质疑你的决策，主动建议更好的方案，与你平等对话。</p>
       </div>
-      <div class="feature-card">
-        <div class="icon">🔪</div>
-        <div data-lang="zh" class="show">
-          <h3>Dr. Sharp</h3>
-          <p>内置人生教练人格，三阶段心理分析工作流。用手术刀般精准的方式审视你的代码和决策。</p>
+      <div class="feat-grid">
+        <div class="feat fu">
+          <div class="feat-ico" style="background:rgba(245,158,11,.1)">🎭</div>
+          <h3>6 种人格模式</h3>
+          <p>从温柔鼓励到犀利分析，从代码牛马到超级 AI。每种模式切换性格、工具、UI、权限。支持自定义 YAML 模式。</p>
         </div>
-        <div data-lang="en">
-          <h3>Dr. Sharp</h3>
-          <p>Built-in life coach persona with a 3-stage psychological analysis workflow.</p>
+        <div class="feat fu">
+          <div class="feat-ico" style="background:rgba(0,255,170,.08)">🔪</div>
+          <h3>Dr. Sharp — 心理手术刀</h3>
+          <p>内置人生教练人格。三阶段深度诊断：隐藏叙事 → 行动策略 → 镜像自我。手术刀般精准地审视你的决策。</p>
         </div>
-      </div>
-      <div class="feature-card">
-        <div class="icon">📋</div>
-        <div data-lang="zh" class="show">
-          <h3>代码问责</h3>
-          <p>AI 修改代码后强制展示 diff 并追问修改理由，记录决策日志。</p>
+        <div class="feat fu">
+          <div class="feat-ico" style="background:rgba(123,97,255,.08)">📋</div>
+          <h3>代码问责面板</h3>
+          <p>AI 修改代码后强制展示 diff 并追问修改理由。每一次变更都有决策日志，可追溯、可审计。</p>
         </div>
-        <div data-lang="en">
-          <h3>Code Accountability</h3>
-          <p>Force-show diff after AI edits, ask for modification reasons, log decisions.</p>
+        <div class="feat fu">
+          <div class="feat-ico" style="background:rgba(0,229,255,.08)">🔌</div>
+          <h3>7 大模型供应商</h3>
+          <p>Anthropic / OpenAI / Gemini / Grok / Bedrock / Vertex / Foundry — 一个 CLI 接入所有主流 LLM。</p>
         </div>
-      </div>
-      <div class="feature-card">
-        <div class="icon">🔌</div>
-        <div data-lang="zh" class="show">
-          <h3>多模型供应商</h3>
-          <p>支持 Anthropic/OpenAI/Gemini/Grok 等 7 个 API 提供商。</p>
+        <div class="feat fu">
+          <div class="feat-ico" style="background:rgba(255,68,136,.08)">🖥️</div>
+          <h3>Computer Use & Chrome</h3>
+          <p>屏幕截图、键鼠控制。Chrome 浏览器自动化 — 表单填写、数据抓取、网页交互，全在终端完成。</p>
         </div>
-        <div data-lang="en">
-          <h3>Multi-API Providers</h3>
-          <p>Support 7 API providers: Anthropic, OpenAI, Gemini, Grok, Bedrock, Vertex, Foundry.</p>
+        <div class="feat fu">
+          <div class="feat-ico" style="background:rgba(245,158,11,.08)">🎙️</div>
+          <h3>Voice Mode</h3>
+          <p>语音输入支持，集成豆包 ASR。用声音和 AI 对话，解放双手。</p>
         </div>
-      </div>
-      <div class="feature-card">
-        <div class="icon">🖥️</div>
-        <div data-lang="zh" class="show">
-          <h3>Computer Use</h3>
-          <p>屏幕截图、键鼠控制。Chrome 浏览器自动化、表单填写、数据抓取。</p>
+        <div class="feat fu">
+          <div class="feat-ico" style="background:rgba(0,255,170,.08)">📱</div>
+          <h3>Remote Control</h3>
+          <p>Docker 自托管远程界面。在手机上也能看 xclaw 的实时输出，随时随地协作。</p>
         </div>
-        <div data-lang="en">
-          <h3>Computer Use</h3>
-          <p>Screen capture, keyboard/mouse control. Chrome browser automation and data scraping.</p>
+        <div class="feat fu">
+          <div class="feat-ico" style="background:rgba(123,97,255,.08)">🔍</div>
+          <h3>Web Search</h3>
+          <p>内置网页搜索能力，支持 Bing 和 Brave。AI agent 自主搜索、分析、整合信息。</p>
         </div>
-      </div>
-      <div class="feature-card">
-        <div class="icon">💰</div>
-        <div data-lang="zh" class="show">
-          <h3>穷鬼模式</h3>
-          <p>省 Token 模式，关闭记忆提取和键入建议，显著减少消耗。</p>
-        </div>
-        <div data-lang="en">
-          <h3>Budget Mode</h3>
-          <p>Token-saving mode — disable memory extraction and input suggestions to reduce costs.</p>
+        <div class="feat fu">
+          <div class="feat-ico" style="background:rgba(255,68,136,.08)">💰</div>
+          <h3>Poor Mode</h3>
+          <p>省 Token 模式 — 关闭记忆提取和键入建议，显著减少 API 消耗。穷鬼也能用 AI。</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Modes -->
-  <section class="modes">
-    <div data-lang="zh" class="show">
-      <h2>模式系统</h2>
+  <section id="modes">
+    <div class="wrap">
+      <div class="fu">
+        <p class="sec-lbl">// Mode System</p>
+        <h2 class="sec-title">切换人格，切换工作方式</h2>
+        <p class="sec-desc">每种模式不只是不同的 prompt — 是完整的工具链、权限模型和 UI 风格的切换。</p>
+      </div>
+      <div class="modes-grid">
+        <div class="mode fu">
+          <div class="mode-head">
+            <span class="mode-emoji">⚡</span>
+            <span class="mode-name">Default</span>
+            <span class="mode-tag" style="background:rgba(245,158,11,.1);color:var(--amber)">standard</span>
+          </div>
+          <p>专业、平衡。标准权限，适合日常编码。</p>
+        </div>
+        <div class="mode fu">
+          <div class="mode-head">
+            <span class="mode-emoji">🌸</span>
+            <span class="mode-name">Gentle</span>
+            <span class="mode-tag" style="background:rgba(255,68,136,.1);color:var(--neon3)">standard</span>
+          </div>
+          <p>耐心、鼓励。适合学习新手，给你最温柔的引导。</p>
+        </div>
+        <div class="mode fu">
+          <div class="mode-head">
+            <span class="mode-emoji">🔪</span>
+            <span class="mode-name">Dr. Sharp</span>
+            <span class="mode-tag" style="background:rgba(0,229,255,.1);color:var(--cyan)">standard</span>
+          </div>
+          <p>心理手术刀。三阶段分析工作流，精准诊断你的代码和决策。</p>
+        </div>
+        <div class="mode fu">
+          <div class="mode-head">
+            <span class="mode-emoji">🐎</span>
+            <span class="mode-name">Workhorse</span>
+            <span class="mode-tag" style="background:rgba(0,255,170,.1);color:var(--neon)">auto-edit</span>
+          </div>
+          <p>高效、零废话。自动批准文件操作，全力输出代码。</p>
+        </div>
+        <div class="mode fu">
+          <div class="mode-head">
+            <span class="mode-emoji">💰</span>
+            <span class="mode-name">Token Saver</span>
+            <span class="mode-tag" style="background:rgba(123,97,255,.1);color:var(--neon2)">auto</span>
+          </div>
+          <p>简洁、精准。省 Token 模式，关掉一切花里胡哨。</p>
+        </div>
+        <div class="mode fu">
+          <div class="mode-head">
+            <span class="mode-emoji">🧠</span>
+            <span class="mode-name">Super AI</span>
+            <span class="mode-tag" style="background:rgba(245,158,11,.1);color:var(--amber)">full-auto</span>
+          </div>
+          <p>全能、主动。全部自动批准，让 AI 自由发挥。</p>
+        </div>
+      </div>
     </div>
-    <div data-lang="en">
-      <h2>Mode System</h2>
-    </div>
-    <table class="mode-table">
-      <thead>
-        <tr>
-          <div data-lang="zh" class="show"><th>模式</th><th>性格</th><th>权限</th></div>
-          <div data-lang="en"><th>Mode</th><th>Personality</th><th>Permissions</th></div>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="mode-name">&#x26A1; Default</span></td>
-          <div data-lang="zh" class="show"><td>专业、平衡</td><td>标准</td></div>
-          <div data-lang="en"><td>Professional, balanced</td><td>Standard</td></div>
-        </tr>
-        <tr>
-          <td><span class="mode-name">&#x1F338; Gentle</span></td>
-          <div data-lang="zh" class="show"><td>耐心、鼓励</td><td>标准</td></div>
-          <div data-lang="en"><td>Patient, encouraging</td><td>Standard</td></div>
-        </tr>
-        <tr>
-          <td><span class="mode-name">&#x1F535; Dr. Sharp</span></td>
-          <div data-lang="zh" class="show"><td>心理手术刀，三阶段分析</td><td>标准</td></div>
-          <div data-lang="en"><td>Psychological scalpel, 3-stage analysis</td><td>Standard</td></div>
-        </tr>
-        <tr>
-          <td><span class="mode-name">&#x1F40E; Workhorse</span></td>
-          <div data-lang="zh" class="show"><td>高效、零废话</td><td>自动批准文件操作</td></div>
-          <div data-lang="en"><td>Efficient, zero fluff</td><td>Auto-approve file ops</td></div>
-        </tr>
-        <tr>
-          <td><span class="mode-name">&#x1F4B0; Token Saver</span></td>
-          <div data-lang="zh" class="show"><td>简洁、精准</td><td>自动批准</td></div>
-          <div data-lang="en"><td>Concise, precise</td><td>Auto-approve</td></div>
-        </tr>
-        <tr>
-          <td><span class="mode-name">&#x1F9E0; Super AI</span></td>
-          <div data-lang="zh" class="show"><td>全能、主动</td><td>全部自动批准</td></div>
-          <div data-lang="en"><td>All-powerful, proactive</td><td>Approve everything</td></div>
-        </tr>
-      </tbody>
-    </table>
   </section>
 
-  <!-- Quick Start -->
-  <section class="quickstart">
-    <div data-lang="zh" class="show">
-      <h2>快速开始</h2>
+  <!-- Architecture -->
+  <section id="arch">
+    <div class="wrap">
+      <div class="fu">
+        <p class="sec-lbl">// Architecture</p>
+        <h2 class="sec-title">五层引擎架构</h2>
+        <p class="sec-desc">从模型到工具到 UI，每一层都可独立扩展、替换。</p>
+      </div>
+      <div class="arch fu">
+        <div class="arch-layers">
+          <div class="arch-layer">
+            <span class="al-ico">🎭</span>
+            <div><div class="al-name">Mode Layer</div><div class="al-desc">人格、性格、工具集、UI 风格、权限 — 一切由模式驱动</div></div>
+          </div>
+          <div class="arch-layer">
+            <span class="al-ico">🤖</span>
+            <div><div class="al-name">Agent Loop</div><div class="al-desc">model → tool → execute → result → model，最多 20 轮自主循环</div></div>
+          </div>
+          <div class="arch-layer">
+            <span class="al-ico">🔌</span>
+            <div><div class="al-name">Provider Layer</div><div class="al-desc">Anthropic / OpenAI / Gemini / Grok — 统一接口，自由切换</div></div>
+          </div>
+          <div class="arch-layer">
+            <span class="al-ico">🛠</span>
+            <div><div class="al-name">Tool System</div><div class="al-desc">Bash / Read / Edit / Write / Grep / Glob / Computer Use / Chrome / Web Search</div></div>
+          </div>
+          <div class="arch-layer">
+            <span class="al-ico">🖥️</span>
+            <div><div class="al-name">TUI Layer</div><div class="al-desc">Ink (React) 驱动 — 流式 Markdown、diff 高亮、工具卡片、状态栏</div></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div data-lang="en">
-      <h2>Quick Start</h2>
-    </div>
-    <div class="steps">
-      <div class="step">
-        <div data-lang="zh" class="show">
-          <div class="num">第一步</div>
+  </section>
+
+  <!-- Install -->
+  <section id="install">
+    <div class="wrap">
+      <div class="fu">
+        <p class="sec-lbl">// Get Started</p>
+        <h2 class="sec-title">三步开始</h2>
+        <p class="sec-desc">从安装到运行，不到两分钟。</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step fu">
+          <span class="step-num">01</span>
           <h3>安装</h3>
-          <p>克隆仓库并运行安装脚本</p>
+          <p>一键安装脚本，自动配置环境。需要 Bun 或 Node.js ≥ 18。</p>
+          <code>bash <(curl -fsSL \
+  https://raw.githubusercontent.com/\
+YuanyuanMa03/xclaw/main/\
+scripts/install.sh)</code>
         </div>
-        <div data-lang="en">
-          <div class="num">Step 1</div>
-          <h3>Install</h3>
-          <p>Clone and run the installer</p>
-        </div>
-        <code>./scripts/install-from-source-mac.sh</code>
-      </div>
-      <div class="step">
-        <div data-lang="zh" class="show">
-          <div class="num">第二步</div>
+        <div class="step fu">
+          <span class="step-num">02</span>
           <h3>配置 API</h3>
-          <p>启动后输入 /login 配置你的 API</p>
+          <p>启动后输入 <code style="display:inline;padding:2px 8px;font-size:.82rem">/login</code> 配置你的 API Key。</p>
+          <code>xclaw
+/login
+# 输入 Base URL + API Key</code>
         </div>
-        <div data-lang="en">
-          <div class="num">Step 2</div>
-          <h3>Configure API</h3>
-          <p>Run /login to set up your API</p>
+        <div class="step fu">
+          <span class="step-num">03</span>
+          <h3>选择模式，开始协作</h3>
+          <p>用 Ctrl+M 切换模式，或直接 <code style="display:inline;padding:2px 8px;font-size:.82rem">/mode sharp</code> 进入 Dr. Sharp。</p>
+          <code>/mode sharp
+Ctrl+M cycle modes</code>
         </div>
-        <code>xclaw
-/login</code>
-      </div>
-      <div class="step">
-        <div data-lang="zh" class="show">
-          <div class="num">第三步</div>
-          <h3>开始协作</h3>
-          <p>选择模式，与 AI 平等对话</p>
-        </div>
-        <div data-lang="en">
-          <div class="num">Step 3</div>
-          <h3>Start Collaborating</h3>
-          <p>Pick a mode and talk to AI as an equal</p>
-        </div>
-        <code>/mode sharp
-Ctrl+M to cycle modes</code>
       </div>
     </div>
   </section>
-</div>
 
-<footer>
-  <div data-lang="zh" class="show">
-    <p>xclaw — 超越人类与 AI 的边界</p>
-  </div>
-  <div data-lang="en">
-    <p>xclaw — Beyond the Boundary of Human and AI</p>
-  </div>
-  <div class="links">
-    <a href="https://github.com/YuanyuanMa03/xclaw">GitHub</a>
-    <a href="https://github.com/YuanyuanMa03/xclaw/releases">Releases</a>
-    <a href="https://github.com/YuanyuanMa03/xclaw/issues">Issues</a>
-  </div>
-</footer>
+  <footer>
+    <div class="wrap">
+      <p><span class="amber">xclaw</span> — 超越人类与 AI 的边界</p>
+      <div class="footer-links">
+        <a href="https://github.com/YuanyuanMa03/xclaw">GitHub</a>
+        <a href="https://github.com/YuanyuanMa03/xclaw/releases">Releases</a>
+        <a href="https://github.com/YuanyuanMa03/xclaw/issues">Issues</a>
+        <a href="https://github.com/YuanyuanMa03/xclaw/blob/main/README.md">Docs</a>
+      </div>
+    </div>
+  </footer>
 
-<script>
-function switchLang(lang) {
-  document.querySelectorAll('[data-lang]').forEach(el => {
-    el.classList.toggle('show', el.dataset.lang === lang);
-  });
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.textContent.trim() === (lang === 'zh' ? '中文' : 'English'));
-  });
-  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-}
-</script>
+  <script>
+    // Particle Canvas
+    const c=document.getElementById('bg'),x=c.getContext('2d');
+    let ps=[],mx=-1e3,my=-1e3;
+    const N=60,D=140;
+    function rz(){c.width=innerWidth;c.height=innerHeight}
+    class P{constructor(){this.x=Math.random()*c.width;this.y=Math.random()*c.height;this.vx=(Math.random()-.5)*.35;this.vy=(Math.random()-.5)*.35;this.r=Math.random()*1.2+.4;this.a=Math.random()*.4+.1}
+    update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>c.width)this.vx*=-1;if(this.y<0||this.y>c.height)this.vy*=-1;
+    const dx=this.x-mx,dy=this.y-my,d=Math.sqrt(dx*dx+dy*dy);if(d<100){const f=(100-d)/100*.015;this.vx+=dx*f;this.vy+=dy*f}this.vx*=.995;this.vy*=.995}
+    draw(){x.beginPath();x.arc(this.x,this.y,this.r,0,Math.PI*2);x.fillStyle=`rgba(245,158,11,${this.a})`;x.fill()}}
+    function init(){rz();ps=[];for(let i=0;i<N;i++)ps.push(new P)}
+    function loop(){x.clearRect(0,0,c.width,c.height);for(let i=0;i<ps.length;i++){ps[i].update();ps[i].draw();for(let j=i+1;j<ps.length;j++){const dx=ps[i].x-ps[j].x,dy=ps[i].y-ps[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<D){x.beginPath();x.moveTo(ps[i].x,ps[i].y);x.lineTo(ps[j].x,ps[j].y);x.strokeStyle=`rgba(245,158,11,${(1-d/D)*.12})`;x.lineWidth=.5;x.stroke()}}}
+    requestAnimationFrame(loop)}
+    addEventListener('resize',rz);addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});addEventListener('mouseleave',()=>{mx=-1e3;my=-1e3});
+    init();loop();
+
+    // Scroll animations
+    const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')}),{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('.fu').forEach(el=>obs.observe(el));
+
+    // Copy button
+    function copyInstall(){const cmd=document.getElementById('install-cmd').textContent;navigator.clipboard.writeText(cmd).then(()=>{const b=document.querySelector('.copy-btn');b.textContent='Copied!';b.classList.add('copied');setTimeout(()=>{b.textContent='Copy';b.classList.remove('copied')},2000)})}
+  </script>
 </body>
 </html>
