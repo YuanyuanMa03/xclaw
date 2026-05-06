@@ -219,7 +219,7 @@ rm -rf ~/.xclaw                      # Config files
 
 xclaw is a project built on the shoulders of giants, and we're honest about that.
 
-The **core engine** architecture heavily borrows from and references [Claude Code Best (CCB)](https://github.com/anthropics/claude-code) — a community-enhanced fork of Anthropic's open-source [Claude Code](https://github.com/anthropics/claude-code). CCB made significant stability fixes and feature extensions on top of the original, and is the primary upstream of xclaw. The Agent Loop, Tool System, Provider Layer, Permission System, Compact/Memory, and other core mechanisms are all inherited from CCB.
+The **core engine** architecture is based on [Claude Code Best (CCB)](https://github.com/anthropics/claude-code) — a community-enhanced fork of Anthropic's open-source [Claude Code](https://github.com/anthropics/claude-code). xclaw uses CCB as its upstream foundation and has undergone extensive secondary development on top of it. The Agent Loop, Tool System, Provider Layer, Permission System, Compact/Memory, and other core mechanisms are inherited from CCB, but we have heavily rewritten, extended, and customized them.
 
 **At the same time**, xclaw injects significant original design and thinking:
 
@@ -230,7 +230,7 @@ The **core engine** architecture heavily borrows from and references [Claude Cod
 - **Voice Mode / Computer Use / Chrome Use / Remote Control / Web Search** — New interaction capabilities
 - **WeChat Integration** — WeChat-based agent communication layer
 
-We believe acknowledging inspiration is a strength, not a weakness. The spirit of open source is about honesty, respect, and collective progress. Thanks to the Anthropic team for open-sourcing Claude Code, and to the CCB team for their community enhancements.
+The spirit of open source is about honesty and respect. Thanks to the Anthropic team for open-sourcing Claude Code, and to the CCB team for their community enhancements. xclaw is a secondary development effort built on their foundation — we're proud of what we've added, and honest about what we built upon.
 
 ## License
 
