@@ -14,16 +14,14 @@
     "types": ["bun"],
     "paths": {
       "src/*": ["./src/*"],
-      "@claude-code-best/builtin-tools/*": ["./packages/builtin-tools/src/*"],
-      "@claude-code-best/builtin-tools": [
-        "./packages/builtin-tools/src/index.ts"
-      ],
-      "@claude-code-best/mcp-client/*": ["./packages/mcp-client/src/*"],
-      "@claude-code-best/mcp-client": ["./packages/mcp-client/src/index.ts"],
-      "@claude-code-best/agent-tools/*": ["./packages/agent-tools/src/*"],
-      "@claude-code-best/agent-tools": ["./packages/agent-tools/src/index.ts"],
-      "@claude-code-best/weixin/*": ["./packages/weixin/src/*"],
-      "@claude-code-best/weixin": ["./packages/weixin/src/index.ts"]
+      "@xclaw/builtin-tools/*": ["./packages/builtin-tools/src/*"],
+      "@xclaw/builtin-tools": ["./packages/builtin-tools/src/index.ts"],
+      "@xclaw/mcp-client/*": ["./packages/mcp-client/src/*"],
+      "@xclaw/mcp-client": ["./packages/mcp-client/src/index.ts"],
+      "@xclaw/agent-tools/*": ["./packages/agent-tools/src/*"],
+      "@xclaw/agent-tools": ["./packages/agent-tools/src/index.ts"],
+      "@xclaw/weixin/*": ["./packages/weixin/src/*"],
+      "@xclaw/weixin": ["./packages/weixin/src/index.ts"]
     }
   },
   "include": [

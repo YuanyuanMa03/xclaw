@@ -215,9 +215,26 @@ rm -rf ~/.xclaw                      # Config files
 - **Package Manager**: Bun workspaces (monorepo, 15+ packages)
 - **Lint**: Biome
 
+## Acknowledgments
+
+xclaw is a project built on the shoulders of giants, and we're honest about that.
+
+The **core engine** architecture heavily borrows from and references [Claude Code Best (CCB)](https://github.com/anthropics/claude-code) — a community-enhanced fork of Anthropic's open-source [Claude Code](https://github.com/anthropics/claude-code). CCB made significant stability fixes and feature extensions on top of the original, and is the primary upstream of xclaw. The Agent Loop, Tool System, Provider Layer, Permission System, Compact/Memory, and other core mechanisms are all inherited from CCB.
+
+**At the same time**, xclaw injects significant original design and thinking:
+
+- **Mode System** — 6 personality modes (Gentle / Dr. Sharp / Workhorse / Token Saver / Super AI), each switching personality, toolset, permissions, and UI style
+- **Dr. Sharp Psychological Workflow** — 3-stage cognitive surgery (Deep Diagnosis → Actionable Strategy → Mirror Self)
+- **Code Accountability Panel** — Force-show diff after AI edits, ask for reasons, log decisions
+- **Multi-provider Abstraction** — Extended OpenAI / Gemini / Grok support on top of Anthropic's native architecture
+- **Voice Mode / Computer Use / Chrome Use / Remote Control / Web Search** — New interaction capabilities
+- **WeChat Integration** — WeChat-based agent communication layer
+
+We believe acknowledging inspiration is a strength, not a weakness. The spirit of open source is about honesty, respect, and collective progress. Thanks to the Anthropic team for open-sourcing Claude Code, and to the CCB team for their community enhancements.
+
 ## License
 
-This project is for educational and research purposes only.
+[MIT](LICENSE)
 
 ## Links
 
