@@ -299,7 +299,7 @@ rm -rf ~/.xclaw                     # xclaw 专用配置
 
 xclaw 是一个站在巨人肩膀上的项目，我们对此保持坦诚。
 
-**核心引擎** 的底层架构大量借鉴和参考了 [Claude Code](https://github.com/anthropics/claude-code)（Anthropic 官方开源）的实现——包括 Agent Loop、Tool System、Provider Layer、Permission System、Compact/Memory 等核心机制。我们并非从零构建了这些基础设施，而是基于其开源代码进行了深度定制和改造。
+**核心引擎** 的底层架构大量借鉴和参考了 [Claude Code Best (CCB)](https://github.com/anthropics/claude-code) ——一个基于 Anthropic 官方开源 [Claude Code](https://github.com/anthropics/claude-code) 的社区增强版。CCB 在原版基础上做了大量稳定性修复和功能扩展，是我们项目的主要技术来源。xclaw 的 Agent Loop、Tool System、Provider Layer、Permission System、Compact/Memory 等核心机制均直接继承自 CCB。我们并非从零构建了这些基础设施，而是基于 CCB 的开源代码进行了深度定制和改造。
 
 **但同时**，xclaw 在此基础上注入了大量原创的思考和设计：
 
@@ -310,7 +310,7 @@ xclaw 是一个站在巨人肩膀上的项目，我们对此保持坦诚。
 - **Voice Mode / Computer Use / Chrome Use / Remote Control / Web Search** — 在原版基础上新增的交互能力
 - **WeChat 集成** — 基于微信生态的 agent 通信层
 
-我们深知，承认借鉴并不丢人——丢人的是假装一切从零开始。开源的精神在于诚实、尊重和共同进步。感谢 Anthropic 团队开源了如此优秀的 Claude Code，让我们能在此基础上探索 AI Agent 的更多可能性。
+我们深知，承认借鉴并不丢人——丢人的是假装一切从零开始。开源的精神在于诚实、尊重和共同进步。感谢 Anthropic 团队开源了 Claude Code，感谢 CCB 团队的社区增强工作，让我们能在此基础上探索 AI Agent 的更多可能性。
 
 如果你也在做类似的项目，欢迎交流。我们相信，**人机协作的边界，需要更多人一起去探索**。
 
