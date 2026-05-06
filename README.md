@@ -299,7 +299,7 @@ rm -rf ~/.xclaw                     # xclaw 专用配置
 
 xclaw 是一个站在巨人肩膀上的项目，我们对此保持坦诚。
 
-**核心引擎** 的底层架构基于 [Claude Code Best (CCB)](https://github.com/anthropics/claude-code) ——一个基于 Anthropic 官方开源 [Claude Code](https://github.com/anthropics/claude-code) 的社区增强版。xclaw 以 CCB 为上游基础，在此基础上进行了大规模的二次开发。Agent Loop、Tool System、Provider Layer、Permission System、Compact/Memory 等核心机制继承自 CCB，但我们在其上做了大量重写、扩展和深度定制。
+**核心引擎** 的底层架构基于 [Claude Code Best (CCB)](https://github.com/claude-code-best/claude-code) ——一个对 Anthropic 商业闭源产品 Claude Code 的逆向还原项目。xclaw 以 CCB 为上游基础，在此基础上进行了大规模的二次开发。Agent Loop、Tool System、Provider Layer、Permission System、Compact/Memory 等核心机制继承自 CCB，但我们在其上做了大量重写、扩展和深度定制。
 
 **但同时**，xclaw 在此基础上注入了大量原创的思考和设计：
 
@@ -310,7 +310,7 @@ xclaw 是一个站在巨人肩膀上的项目，我们对此保持坦诚。
 - **Voice Mode / Computer Use / Chrome Use / Remote Control / Web Search** — 在原版基础上新增的交互能力
 - **WeChat 集成** — 基于微信生态的 agent 通信层
 
-感谢 Anthropic 打造了优秀的 Claude Code，感谢 CCB 团队的逆向还原工作。xclaw 是在他们基础上的二次开发，我们为原创部分感到骄傲，也坦诚承认哪些是站在巨人肩膀上的。
+感谢 Anthropic 打造了优秀的 Claude Code，感谢 CCB 团队的逆向还原工作。xclaw 是在他们基础上的二次开发——我们为原创部分感到骄傲，也坦诚承认哪些是站在巨人肩膀上的。
 
 如果你也在做类似的项目，欢迎交流。我们相信，**人机协作的边界，需要更多人一起去探索**。
 
@@ -318,6 +318,6 @@ xclaw 是一个站在巨人肩膀上的项目，我们对此保持坦诚。
 
 本项目仅供**学习研究**用途。
 
-核心代码基于 [Claude Code Best (CCB)](https://github.com/claude-code-best/claude-code) 二次开发，CCB 源自对 [Anthropic Claude Code](https://github.com/anthropics/claude-code) 的逆向还原。Anthropic Claude Code 的原始代码版权归 © Anthropic PBC 所有，使用受 [Anthropic Commercial Terms of Service](https://www.anthropic.com/legal/commercial-terms) 约束。
+核心代码基于 [Claude Code Best (CCB)](https://github.com/claude-code-best/claude-code) 二次开发，CCB 源自对 Anthropic Claude Code 的逆向还原，Claude Code 为商业闭源产品，版权归 © Anthropic PBC 所有。
 
 **xclaw 不声称对上游代码拥有版权，不提供任何形式的担保，不授予商业使用许可。**
