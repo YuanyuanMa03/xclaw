@@ -1,21 +1,21 @@
 # Security Policy
 
-## Supported Versions
-
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
-
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
-
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+If you discover a security vulnerability in xclaw, please report it privately:
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+- **Email:** 2942204237@qq.com
+- **GitHub:** Open a private security advisory at [github.com/YuanyuanMa03/xclaw/security](https://github.com/YuanyuanMa03/xclaw/security)
+
+Please do NOT open a public issue for security vulnerabilities.
+
+## What to Include
+
+- Description of the vulnerability
+- Steps to reproduce
+- Potential impact
+- Suggested fix (if any)
+
+## Response Time
+
+I will acknowledge receipt within 48 hours and provide a status update within 7 days.

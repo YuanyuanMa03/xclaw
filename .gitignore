@@ -49,3 +49,6 @@ credentials.json
 
 # Build artifacts
 xclaw-*.tar.gz
+
+# Lock file
+bun.lock

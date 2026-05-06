@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Claude Code Architecture",
+  "name": "xclaw — Beyond the Boundary of Human and AI",
   "logo": {
     "dark": "/docs/logo/dark.svg",
     "light": "/docs/logo/light.svg"
@@ -16,8 +16,8 @@
     }
   },
   "metadata": {
-    "og:image": "https://ccb.agent-aura.top/docs/images/og-cover.png",
-    "twitter:image": "https://ccb.agent-aura.top/docs/images/og-cover.png",
+    "og:image": "https://yuanyuanma03.github.io/xclaw/docs/images/og-cover.png",
+    "twitter:image": "https://yuanyuanma03.github.io/xclaw/docs/images/og-cover.png",
     "twitter:card": "summary_large_image"
   },
   "topbarCtaButton": {

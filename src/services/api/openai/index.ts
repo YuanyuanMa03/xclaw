@@ -62,7 +62,7 @@ import {
   formatDeferredToolLine,
   isDeferredTool,
   TOOL_SEARCH_TOOL_NAME,
-} from '@claude-code-best/builtin-tools/tools/ToolSearchTool/prompt.js'
+} from '@xclaw/builtin-tools/tools/ToolSearchTool/prompt.js'
 
 /**
  * Mirrors the Anthropic request path's deferred-tool announcement for OpenAI.

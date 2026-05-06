@@ -93,7 +93,7 @@ export function GlobalKeybindingHandlers({
       // isBriefOnly (Messages.tsx filter is gated on !isTranscriptMode).
       /* eslint-disable @typescript-eslint/no-require-imports */
       const { isBriefEnabled } =
-        require('@claude-code-best/builtin-tools/tools/BriefTool/BriefTool.js') as typeof import('@claude-code-best/builtin-tools/tools/BriefTool/BriefTool.js');
+        require('@xclaw/builtin-tools/tools/BriefTool/BriefTool.js') as typeof import('@xclaw/builtin-tools/tools/BriefTool/BriefTool.js');
       /* eslint-enable @typescript-eslint/no-require-imports */
       if (!isBriefEnabled() && isBriefOnly && screen !== 'transcript') {
         setAppState(prev => {
@@ -160,7 +160,7 @@ export function GlobalKeybindingHandlers({
     if (feature('KAIROS') || feature('KAIROS_BRIEF')) {
       /* eslint-disable @typescript-eslint/no-require-imports */
       const { isBriefEnabled } =
-        require('@claude-code-best/builtin-tools/tools/BriefTool/BriefTool.js') as typeof import('@claude-code-best/builtin-tools/tools/BriefTool/BriefTool.js');
+        require('@xclaw/builtin-tools/tools/BriefTool/BriefTool.js') as typeof import('@xclaw/builtin-tools/tools/BriefTool/BriefTool.js');
       /* eslint-enable @typescript-eslint/no-require-imports */
       if (!isBriefEnabled() && !isBriefOnly) return;
       const next = !isBriefOnly;

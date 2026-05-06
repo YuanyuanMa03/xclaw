@@ -227,5 +227,7 @@
     "*.{json,jsonc}": [
       "biome format --write --no-errors-on-unmatched"
     ]
-  }
+  },
+  "license": "MIT",
+  "main": "dist/cli-node.js"
 }
