@@ -32,62 +32,35 @@ xclaw is an AI programming CLI tool with strong personal branding. It's not just
 
 ## Quick Start
 
-### Option 1: Pre-built Package (Simplest)
+### One-command install (macOS / Linux)
 
-Download `xclaw-1.0.0.tar.gz`, extract and run the platform-specific installer:
-
-```bash
-# macOS
-tar xzf xclaw-1.0.0.tar.gz && cd xclaw-1.0.0
-./install-mac.sh
-
-# Linux
-tar xzf xclaw-1.0.0.tar.gz && cd xclaw-1.0.0
-./install-linux.sh
-```
-
-```powershell
-# Windows
-.\install-windows.ps1
-```
-
-### Option 2: Install from Source (Recommended for Developers)
+Requires [Bun](https://bun.sh) (recommended) or Node.js >= 18.
 
 ```bash
-# macOS / Linux - One-click install
-git clone https://github.com/YuanyuanMa03/xclaw.git
-cd xclaw
-./scripts/install-from-source-mac.sh    # macOS
-# or
-./scripts/install-from-source-linux.sh  # Linux
+bash <(curl -fsSL https://raw.githubusercontent.com/YuanyuanMa03/xclaw/main/scripts/install.sh)
 ```
 
+After installation, open a new terminal:
+
+```bash
+xclaw              # Start
+xclaw --version    # 1.0.0 (xclaw)
+```
+
+First time? Run `/login` to configure your API.
+
+### Windows
+
 ```powershell
-# Windows
 git clone https://github.com/YuanyuanMa03/xclaw.git
 cd xclaw
 .\scripts\install-from-source-windows.ps1
 ```
 
-### Option 3: Manual Install
+### Uninstall
 
 ```bash
-# Requirements: Bun >= 1.3 or Node.js >= 18
-curl -fsSL https://bun.sh/install | bash  # Install Bun
-
-# Clone and install
-git clone https://github.com/YuanyuanMa03/xclaw.git
-cd xclaw
-bun install
-bun run build
-
-# Global link
-bun link
-```
-
-```bash
-# Verify installation
-xclaw --version    # 1.0.0 (xclaw)
+bash <(curl -fsSL https://raw.githubusercontent.com/YuanyuanMa03/xclaw/main/scripts/uninstall.sh)
 ```
 
 ### Development Mode
