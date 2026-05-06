@@ -234,7 +234,11 @@ The spirit of open source is about honesty and respect. Thanks to the Anthropic 
 
 ## License
 
-[MIT](LICENSE)
+This project is for **educational and research purposes only**.
+
+The core codebase is based on [Claude Code Best (CCB)](https://github.com/claude-code-best/claude-code), which is itself a reverse-engineered reconstruction of [Anthropic's Claude Code](https://github.com/anthropics/claude-code). The original code is copyrighted © Anthropic PBC, and its use is subject to the [Anthropic Commercial Terms of Service](https://www.anthropic.com/legal/commercial-terms).
+
+**xclaw does not claim copyright over upstream code, provides no warranties, and does not grant commercial use licenses.**
 
 ## Links
 

@@ -316,4 +316,8 @@ xclaw 是一个站在巨人肩膀上的项目，我们对此保持坦诚。
 
 ## 许可证
 
-[MIT](LICENSE)
+本项目仅供**学习研究**用途。
+
+核心代码基于 [Claude Code Best (CCB)](https://github.com/claude-code-best/claude-code) 二次开发，CCB 源自对 [Anthropic Claude Code](https://github.com/anthropics/claude-code) 的逆向还原。Anthropic Claude Code 的原始代码版权归 © Anthropic PBC 所有，使用受 [Anthropic Commercial Terms of Service](https://www.anthropic.com/legal/commercial-terms) 约束。
+
+**xclaw 不声称对上游代码拥有版权，不提供任何形式的担保，不授予商业使用许可。**
