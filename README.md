@@ -310,7 +310,7 @@ xclaw 是一个站在巨人肩膀上的项目，我们对此保持坦诚。
 - **Voice Mode / Computer Use / Chrome Use / Remote Control / Web Search** — 在原版基础上新增的交互能力
 - **WeChat 集成** — 基于微信生态的 agent 通信层
 
-开源的精神在于诚实与尊重。感谢 Anthropic 团队开源了 Claude Code，感谢 CCB 团队的社区增强工作。xclaw 是在他们基础上的二次开发，我们为原创部分感到骄傲，也坦诚承认哪些是站在巨人肩膀上的。
+感谢 Anthropic 打造了优秀的 Claude Code，感谢 CCB 团队的逆向还原工作。xclaw 是在他们基础上的二次开发，我们为原创部分感到骄傲，也坦诚承认哪些是站在巨人肩膀上的。
 
 如果你也在做类似的项目，欢迎交流。我们相信，**人机协作的边界，需要更多人一起去探索**。
 

@@ -230,7 +230,7 @@ The **core engine** architecture is based on [Claude Code Best (CCB)](https://gi
 - **Voice Mode / Computer Use / Chrome Use / Remote Control / Web Search** — New interaction capabilities
 - **WeChat Integration** — WeChat-based agent communication layer
 
-The spirit of open source is about honesty and respect. Thanks to the Anthropic team for open-sourcing Claude Code, and to the CCB team for their community enhancements. xclaw is a secondary development effort built on their foundation — we're proud of what we've added, and honest about what we built upon.
+Thanks to Anthropic for building Claude Code, and to the CCB team for their reverse-engineering work. xclaw is a secondary development built on their foundation — we're proud of what we've added, and honest about what we built upon.
 
 ## License
 
