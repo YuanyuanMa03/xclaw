@@ -357,48 +357,70 @@ export const loadMarkdownFilesForSubdir = memoize(
       }
     }
 
-    const [managedFiles, userFiles, projectFilesNested] = await Promise.all([
-      // Always load managed (policy settings)
-      loadMarkdownFiles(managedDir).then(_ =>
-        _.map(file => ({
-          ...file,
-          baseDir: managedDir,
-          source: 'policySettings' as const,
-        })),
-      ),
-      // Conditionally load user files
-      isSettingSourceEnabled('userSettings') &&
-      !(subdir === 'agents' && isRestrictedToPluginOnly('agents'))
-        ? loadMarkdownFiles(userDir).then(_ =>
-            _.map(file => ({
-              ...file,
-              baseDir: userDir,
-              source: 'userSettings' as const,
-            })),
-          )
-        : Promise.resolve([]),
-      // Conditionally load project files from all directories up to home
-      isSettingSourceEnabled('projectSettings') &&
-      !(subdir === 'agents' && isRestrictedToPluginOnly('agents'))
-        ? Promise.all(
-            projectDirs.map(projectDir =>
-              loadMarkdownFiles(projectDir).then(_ =>
+    const xclawUserDir = join(getXclawConfigHomeDir(), subdir)
+
+    const [managedFiles, userFiles, xclawUserFiles, projectFilesNested] =
+      await Promise.all([
+        // Always load managed (policy settings)
+        loadMarkdownFiles(managedDir).then(_ =>
+          _.map(file => ({
+            ...file,
+            baseDir: managedDir,
+            source: 'policySettings' as const,
+          })),
+        ),
+        // Conditionally load user files
+        isSettingSourceEnabled('userSettings') &&
+        !(subdir === 'agents' && isRestrictedToPluginOnly('agents'))
+          ? loadMarkdownFiles(userDir).then(_ =>
+              _.map(file => ({
+                ...file,
+                baseDir: userDir,
+                source: 'userSettings' as const,
+              })),
+            )
+          : Promise.resolve([]),
+        // xclaw user files (~/.xclaw/{subdir})
+        isSettingSourceEnabled('userSettings')
+          ? loadMarkdownFiles(xclawUserDir)
+              .then(_ =>
                 _.map(file => ({
                   ...file,
-                  baseDir: projectDir,
-                  source: 'projectSettings' as const,
+                  baseDir: xclawUserDir,
+                  source: 'xclawUserSettings' as const,
                 })),
+              )
+              .catch(() => []) // xclaw dir may not exist
+          : Promise.resolve([]),
+        // Conditionally load project files from all directories up to home
+        isSettingSourceEnabled('projectSettings') &&
+        !(subdir === 'agents' && isRestrictedToPluginOnly('agents'))
+          ? Promise.all(
+              projectDirs.map(projectDir =>
+                loadMarkdownFiles(projectDir).then(_ =>
+                  _.map(file => ({
+                    ...file,
+                    baseDir: projectDir,
+                    source: (projectDir.includes('.xclaw')
+                      ? 'xclawProjectSettings'
+                      : 'projectSettings') as const,
+                  })),
+                ),
               ),
-            ),
-          )
-        : Promise.resolve([]),
-    ])
+            )
+          : Promise.resolve([]),
+      ])
 
     // Flatten nested project files array
     const projectFiles = projectFilesNested.flat()
 
-    // Combine all files with priority: managed > user > project
-    const allFiles = [...managedFiles, ...userFiles, ...projectFiles]
+    // Combine all files with priority: managed > user > xclawUser > project
+    const allFiles = [
+      ...managedFiles,
+      ...userFiles,
+      ...xclawUserFiles,
+      ...projectFiles,
+    ]
 
     // Deduplicate files that resolve to the same physical file (same inode).
     // This prevents the same file from appearing multiple times when ~/.claude is
