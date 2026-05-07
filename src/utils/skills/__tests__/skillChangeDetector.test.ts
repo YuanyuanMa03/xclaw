@@ -8,6 +8,7 @@ describe('skillChangeDetector xclaw support', () => {
   let tmpDir: string
   let origClaudeConfigDir: string | undefined
   let origXclawConfigDir: string | undefined
+  let origCwd: string
 
   beforeEach(() => {
     tmpDir = join(
@@ -17,11 +18,15 @@ describe('skillChangeDetector xclaw support', () => {
     mkdirSync(tmpDir, { recursive: true })
     origClaudeConfigDir = process.env.CLAUDE_CONFIG_DIR
     origXclawConfigDir = process.env.XCLAW_CONFIG_DIR
+    origCwd = process.cwd()
     process.env.CLAUDE_CONFIG_DIR = join(tmpDir, '.claude')
     process.env.XCLAW_CONFIG_DIR = join(tmpDir, '.xclaw')
+    // Change cwd to tmpDir so project-level scan doesn't find real .xclaw/
+    process.chdir(tmpDir)
   })
 
   afterEach(() => {
+    process.chdir(origCwd)
     if (origClaudeConfigDir !== undefined) {
       process.env.CLAUDE_CONFIG_DIR = origClaudeConfigDir
     } else {
