@@ -10,7 +10,12 @@ import {
 } from 'src/services/analytics/index.js'
 import { getProjectRoot } from '../bootstrap/state.js'
 import { logForDebugging } from './debug.js'
-import { getClaudeConfigHomeDir, isEnvTruthy } from './envUtils.js'
+import {
+  getClaudeConfigHomeDir,
+  getProjectDotDir,
+  getXclawConfigHomeDir,
+  isEnvTruthy,
+} from './envUtils.js'
 import { isFsInaccessible } from './errors.js'
 import { normalizePathForComparison } from './file.js'
 import type { FrontmatterData } from './frontmatterParser.js'
@@ -250,18 +255,28 @@ export function getProjectDirsUpToHome(
       break
     }
 
-    const claudeSubdir = join(current, '.claude', subdir)
-    // Filter to existing dirs. This is a perf filter (avoids spawning
-    // ripgrep on non-existent dirs downstream) and the worktree fallback
-    // in loadMarkdownFilesForSubdir relies on it. statSync + explicit error
-    // handling instead of existsSync — re-throws unexpected errors rather
-    // than silently swallowing them. Downstream loadMarkdownFiles handles
-    // the TOCTOU window (dir disappearing before read) gracefully.
+    // Check both .claude/ and .xclaw/ at this directory level.
+    // getProjectDotDir returns the primary (.claude if it exists, else .xclaw),
+    // then we also check the other one as an overlay.
+    const primaryDotDir = getProjectDotDir(current)
+    const primarySubdir = join(current, primaryDotDir, subdir)
     try {
-      statSync(claudeSubdir)
-      dirs.push(claudeSubdir)
+      statSync(primarySubdir)
+      dirs.push(primarySubdir)
     } catch (e: unknown) {
       if (!isFsInaccessible(e)) throw e
+    }
+
+    // Also check the other dot dir (overlay)
+    const otherDotDir = primaryDotDir === '.claude' ? '.xclaw' : '.claude'
+    const otherSubdir = join(current, otherDotDir, subdir)
+    if (otherSubdir !== primarySubdir) {
+      try {
+        statSync(otherSubdir)
+        dirs.push(otherSubdir)
+      } catch (e: unknown) {
+        if (!isFsInaccessible(e)) throw e
+      }
     }
 
     // Stop after processing the git root directory - this prevents commands from parent
@@ -301,7 +316,11 @@ export const loadMarkdownFilesForSubdir = memoize(
   ): Promise<MarkdownFile[]> {
     const searchStartTime = Date.now()
     const userDir = join(getClaudeConfigHomeDir(), subdir)
-    const managedDir = join(getManagedFilePath(), '.claude', subdir)
+    const managedDir = join(
+      getManagedFilePath(),
+      getProjectDotDir(getManagedFilePath()),
+      subdir,
+    )
     const projectDirs = getProjectDirsUpToHome(subdir, cwd)
 
     // For git worktrees where the worktree does NOT have .claude/<subdir> checked
@@ -321,13 +340,17 @@ export const loadMarkdownFilesForSubdir = memoize(
     const canonicalRoot = findCanonicalGitRoot(cwd)
     if (gitRoot && canonicalRoot && canonicalRoot !== gitRoot) {
       const worktreeSubdir = normalizePathForComparison(
-        join(gitRoot, '.claude', subdir),
+        join(gitRoot, getProjectDotDir(gitRoot), subdir),
       )
       const worktreeHasSubdir = projectDirs.some(
         dir => normalizePathForComparison(dir) === worktreeSubdir,
       )
       if (!worktreeHasSubdir) {
-        const mainClaudeSubdir = join(canonicalRoot, '.claude', subdir)
+        const mainClaudeSubdir = join(
+          canonicalRoot,
+          getProjectDotDir(canonicalRoot),
+          subdir,
+        )
         if (!projectDirs.includes(mainClaudeSubdir)) {
           projectDirs.push(mainClaudeSubdir)
         }
