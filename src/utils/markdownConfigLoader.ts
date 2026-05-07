@@ -401,9 +401,9 @@ export const loadMarkdownFilesForSubdir = memoize(
                   _.map(file => ({
                     ...file,
                     baseDir: projectDir,
-                    source: (projectDir.includes('.xclaw')
-                      ? 'xclawProjectSettings'
-                      : 'projectSettings') as const,
+                    source: projectDir.includes('.xclaw')
+                      ? ('xclawProjectSettings' as const)
+                      : ('projectSettings' as const),
                   })),
                 ),
               ),

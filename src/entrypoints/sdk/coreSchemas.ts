@@ -242,8 +242,11 @@ export const McpSetServersResultSchema = lazySchema(() =>
 export const PermissionUpdateDestinationSchema = lazySchema(() =>
   z.enum([
     'userSettings',
+    'xclawUserSettings',
     'projectSettings',
+    'xclawProjectSettings',
     'localSettings',
+    'xclawLocalSettings',
     'session',
     'cliArg',
   ]),

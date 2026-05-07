@@ -210,8 +210,11 @@ export function supportsPersistence(
 ): destination is EditableSettingSource {
   return (
     destination === 'localSettings' ||
+    destination === 'xclawLocalSettings' ||
     destination === 'userSettings' ||
-    destination === 'projectSettings'
+    destination === 'xclawUserSettings' ||
+    destination === 'projectSettings' ||
+    destination === 'xclawProjectSettings'
   )
 }
 

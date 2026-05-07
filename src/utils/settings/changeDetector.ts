@@ -254,10 +254,13 @@ function settingSourceToConfigChangeSource(
 ): ConfigChangeSource {
   switch (source) {
     case 'userSettings':
+    case 'xclawUserSettings':
       return 'user_settings'
     case 'projectSettings':
+    case 'xclawProjectSettings':
       return 'project_settings'
     case 'localSettings':
+    case 'xclawLocalSettings':
       return 'local_settings'
     case 'flagSettings':
     case 'policySettings':

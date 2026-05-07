@@ -1,6 +1,14 @@
 import type { SettingSource } from 'src/utils/settings/constants.js'
 import type { AgentDefinition } from '@xclaw/builtin-tools/tools/AgentTool/loadAgentsDir.js'
+import { getProjectDotDir } from '../../utils/envUtils.js'
 
+export function getAgentPaths() {
+  return {
+    FOLDER_NAME: getProjectDotDir(),
+    AGENTS_DIR: 'agents',
+  } as const
+}
+// Legacy export for backward compatibility
 export const AGENT_PATHS = {
   FOLDER_NAME: '.claude',
   AGENTS_DIR: 'agents',

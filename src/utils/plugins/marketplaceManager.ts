@@ -37,6 +37,7 @@ import { execFileNoThrow, execFileNoThrowWithCwd } from '../execFileNoThrow.js'
 import { getFsImplementation } from '../fsOperations.js'
 import { gitExe } from '../git.js'
 import { logError } from '../log.js'
+import type { EditableSettingSource } from '../settings/constants.js'
 import {
   getInitialSettings,
   getSettingsForSource,
@@ -226,10 +227,7 @@ export function getMarketplaceDeclaringSource(
 export function saveMarketplaceToSettings(
   name: string,
   entry: DeclaredMarketplace,
-  settingSource:
-    | 'userSettings'
-    | 'projectSettings'
-    | 'localSettings' = 'userSettings',
+  settingSource: EditableSettingSource = 'userSettings',
 ): void {
   const existing = getSettingsForSource(settingSource) ?? {}
   const current = { ...existing.extraKnownMarketplaces }
