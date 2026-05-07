@@ -16,6 +16,7 @@ import {
 } from '../../skills/loadSkillsDir.js'
 import { resetSentSkillNames } from '../attachments.js'
 import { registerCleanup } from '../cleanupRegistry.js'
+import { getProjectDotDir, getXclawConfigHomeDir } from '../envUtils.js'
 import { logForDebugging } from '../debug.js'
 import { getFsImplementation } from '../fsOperations.js'
 import { executeConfigChangeHooks, hasBlockingResult } from '../hooks.js'
@@ -168,7 +169,7 @@ export function dispose(): Promise<void> {
  */
 export const subscribe = skillsChanged.subscribe
 
-async function getWatchablePaths(): Promise<string[]> {
+export async function getWatchablePaths(): Promise<string[]> {
   const fs = getFsImplementation()
   const paths: string[] = []
 
@@ -192,6 +193,30 @@ async function getWatchablePaths(): Promise<string[]> {
     } catch {
       // Path doesn't exist, skip it
     }
+  }
+
+  // xclaw user skills directory (~/.xclaw/skills)
+  const xclawUserSkillsPath = platformPath.join(
+    getXclawConfigHomeDir(),
+    'skills',
+  )
+  try {
+    await fs.stat(xclawUserSkillsPath)
+    paths.push(xclawUserSkillsPath)
+  } catch {
+    // Path doesn't exist, skip it
+  }
+
+  // xclaw user commands directory (~/.xclaw/commands)
+  const xclawUserCommandsPath = platformPath.join(
+    getXclawConfigHomeDir(),
+    'commands',
+  )
+  try {
+    await fs.stat(xclawUserCommandsPath)
+    paths.push(xclawUserCommandsPath)
+  } catch {
+    // Path doesn't exist, skip it
   }
 
   // Project skills directory (.claude/skills)
@@ -222,7 +247,11 @@ async function getWatchablePaths(): Promise<string[]> {
 
   // Additional directories (--add-dir) skills
   for (const dir of getAdditionalDirectoriesForClaudeMd()) {
-    const additionalSkillsPath = platformPath.join(dir, '.claude', 'skills')
+    const additionalSkillsPath = platformPath.join(
+      dir,
+      getProjectDotDir(dir),
+      'skills',
+    )
     try {
       await fs.stat(additionalSkillsPath)
       paths.push(additionalSkillsPath)
