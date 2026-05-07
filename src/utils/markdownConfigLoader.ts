@@ -458,6 +458,39 @@ export const loadMarkdownFilesForSubdir = memoize(
       )
     }
 
+    // Name-based dedup: when same relative path exists in both .claude/ and .xclaw/,
+    // keep the .xclaw/ version (xclaw wins on collision).
+    const nameSeen = new Map<string, number>() // relativePath -> index in nameDedupedFiles
+    const nameDedupedFiles: MarkdownFile[] = []
+
+    for (const file of deduplicatedFiles) {
+      // Compute relative path from baseDir (e.g. "foo/SKILL.md")
+      const relativePath = file.filePath
+        .slice(file.baseDir.length)
+        .replace(/^\//, '')
+      const existingIdx = nameSeen.get(relativePath)
+
+      if (existingIdx !== undefined) {
+        const existing = nameDedupedFiles[existingIdx]
+        // If current file is from .xclaw and existing is from .claude, replace
+        if (
+          file.baseDir.includes('.xclaw') &&
+          existing &&
+          !existing.baseDir.includes('.xclaw')
+        ) {
+          nameDedupedFiles[existingIdx] = file
+          logForDebugging(
+            `Name dedup: .xclaw '${relativePath}' overrides .claude version`,
+          )
+        }
+        // Otherwise skip (existing wins)
+        continue
+      }
+
+      nameSeen.set(relativePath, nameDedupedFiles.length)
+      nameDedupedFiles.push(file)
+    }
+
     logEvent(`tengu_dir_search`, {
       durationMs: Date.now() - searchStartTime,
       managedFilesFound: managedFiles.length,
@@ -468,7 +501,7 @@ export const loadMarkdownFilesForSubdir = memoize(
         subdir as AnalyticsMetadata_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS,
     })
 
-    return deduplicatedFiles
+    return nameDedupedFiles
   },
   // Custom resolver creates cache key from both subdir and cwd parameters
   (subdir: ClaudeConfigDirectory, cwd: string) => `${subdir}:${cwd}`,

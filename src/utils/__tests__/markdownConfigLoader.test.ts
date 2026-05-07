@@ -117,3 +117,81 @@ describe('loadMarkdownFilesForSubdir user-level xclaw', () => {
     expect(filePaths.some(p => p.includes('xclaw-user.md'))).toBe(true)
   })
 })
+
+describe('name-based deduplication', () => {
+  let tmpDir: string
+  let origClaudeConfigDir: string | undefined
+  let origXclawConfigDir: string | undefined
+  let origNativeFileSearch: string | undefined
+
+  beforeEach(() => {
+    tmpDir = join(
+      tmpdir(),
+      `xclaw-dedup-test-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    )
+    mkdirSync(tmpDir, { recursive: true })
+    origClaudeConfigDir = process.env.CLAUDE_CONFIG_DIR
+    origXclawConfigDir = process.env.XCLAW_CONFIG_DIR
+    origNativeFileSearch = process.env.CLAUDE_CODE_USE_NATIVE_FILE_SEARCH
+    process.env.CLAUDE_CONFIG_DIR = join(tmpDir, '.claude')
+    process.env.XCLAW_CONFIG_DIR = join(tmpDir, '.xclaw')
+    process.env.CLAUDE_CODE_USE_NATIVE_FILE_SEARCH = '1'
+  })
+
+  afterEach(() => {
+    if (origClaudeConfigDir !== undefined) {
+      process.env.CLAUDE_CONFIG_DIR = origClaudeConfigDir
+    } else {
+      delete process.env.CLAUDE_CONFIG_DIR
+    }
+    if (origXclawConfigDir !== undefined) {
+      process.env.XCLAW_CONFIG_DIR = origXclawConfigDir
+    } else {
+      delete process.env.XCLAW_CONFIG_DIR
+    }
+    if (origNativeFileSearch !== undefined) {
+      process.env.CLAUDE_CODE_USE_NATIVE_FILE_SEARCH = origNativeFileSearch
+    } else {
+      delete process.env.CLAUDE_CODE_USE_NATIVE_FILE_SEARCH
+    }
+    rmSync(tmpDir, { recursive: true, force: true })
+  })
+
+  test('xclaw skill overrides claude skill with same relative path', async () => {
+    mkdirSync(join(tmpDir, '.claude', 'skills', 'foo'), { recursive: true })
+    writeFileSync(
+      join(tmpDir, '.claude', 'skills', 'foo', 'SKILL.md'),
+      '---\nname: foo\n---\nClaude version',
+    )
+
+    mkdirSync(join(tmpDir, '.xclaw', 'skills', 'foo'), { recursive: true })
+    writeFileSync(
+      join(tmpDir, '.xclaw', 'skills', 'foo', 'SKILL.md'),
+      '---\nname: foo\n---\nXclaw version',
+    )
+
+    const files = await loadMarkdownFilesForSubdir('skills', tmpDir)
+    const fooFiles = files.filter(f => f.filePath.includes('foo'))
+    expect(fooFiles).toHaveLength(1)
+    expect(fooFiles[0]!.content).toContain('Xclaw version')
+  })
+
+  test('both skills loaded when relative paths differ', async () => {
+    mkdirSync(join(tmpDir, '.claude', 'skills', 'alpha'), { recursive: true })
+    writeFileSync(
+      join(tmpDir, '.claude', 'skills', 'alpha', 'SKILL.md'),
+      '---\nname: alpha\n---\nAlpha',
+    )
+
+    mkdirSync(join(tmpDir, '.xclaw', 'skills', 'beta'), { recursive: true })
+    writeFileSync(
+      join(tmpDir, '.xclaw', 'skills', 'beta', 'SKILL.md'),
+      '---\nname: beta\n---\nBeta',
+    )
+
+    const files = await loadMarkdownFilesForSubdir('skills', tmpDir)
+    const names = files.map(f => f.frontmatter.name)
+    expect(names).toContain('alpha')
+    expect(names).toContain('beta')
+  })
+})
