@@ -8,11 +8,20 @@ export const SETTING_SOURCES = [
   // User settings (global)
   'userSettings',
 
+  // xclaw user settings (global overlay)
+  'xclawUserSettings',
+
   // Project settings (shared per-directory)
   'projectSettings',
 
+  // xclaw project settings (per-directory overlay)
+  'xclawProjectSettings',
+
   // Local settings (gitignored)
   'localSettings',
+
+  // xclaw local settings (gitignored overlay)
+  'xclawLocalSettings',
 
   // Flag settings (from --settings flag)
   'flagSettings',
@@ -27,10 +36,16 @@ export function getSettingSourceName(source: SettingSource): string {
   switch (source) {
     case 'userSettings':
       return 'user'
+    case 'xclawUserSettings':
+      return 'xclaw user'
     case 'projectSettings':
       return 'project'
+    case 'xclawProjectSettings':
+      return 'xclaw project'
     case 'localSettings':
       return 'project, gitignored'
+    case 'xclawLocalSettings':
+      return 'xclaw project, gitignored'
     case 'flagSettings':
       return 'cli flag'
     case 'policySettings':
@@ -49,10 +64,16 @@ export function getSourceDisplayName(
   switch (source) {
     case 'userSettings':
       return 'User'
+    case 'xclawUserSettings':
+      return 'Xclaw User'
     case 'projectSettings':
       return 'Project'
+    case 'xclawProjectSettings':
+      return 'Xclaw Project'
     case 'localSettings':
       return 'Local'
+    case 'xclawLocalSettings':
+      return 'Xclaw Local'
     case 'flagSettings':
       return 'Flag'
     case 'policySettings':
@@ -75,10 +96,16 @@ export function getSettingSourceDisplayNameLowercase(
   switch (source) {
     case 'userSettings':
       return 'user settings'
+    case 'xclawUserSettings':
+      return 'xclaw user settings'
     case 'projectSettings':
       return 'shared project settings'
+    case 'xclawProjectSettings':
+      return 'xclaw project settings'
     case 'localSettings':
       return 'project local settings'
+    case 'xclawLocalSettings':
+      return 'xclaw project local settings'
     case 'flagSettings':
       return 'command line arguments'
     case 'policySettings':
@@ -103,10 +130,16 @@ export function getSettingSourceDisplayNameCapitalized(
   switch (source) {
     case 'userSettings':
       return 'User settings'
+    case 'xclawUserSettings':
+      return 'Xclaw user settings'
     case 'projectSettings':
       return 'Shared project settings'
+    case 'xclawProjectSettings':
+      return 'Xclaw project settings'
     case 'localSettings':
       return 'Project local settings'
+    case 'xclawLocalSettings':
+      return 'Xclaw project local settings'
     case 'flagSettings':
       return 'Command line arguments'
     case 'policySettings':
