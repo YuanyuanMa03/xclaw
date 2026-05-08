@@ -176,6 +176,19 @@
       .install-row{flex-direction:column;align-items:stretch}
       .copy-btn{width:100%;text-align:center}
     }
+
+    /* Language Switcher */
+    .lang-switch{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);cursor:pointer;transition:all .2s;font-size:.78rem;font-weight:500}
+    .lang-switch:hover{background:rgba(255,255,255,.06);border-color:var(--bdr-h)}
+    .lang-switch span{color:var(--tx2)}
+    .lang-switch span.active{color:var(--amber)}
+    .lang-switch .divider{color:var(--tx3)}
+
+    /* Language visibility */
+    [data-lang="zh"]{display:block}
+    [data-lang="en"]{display:none}
+    body.lang-en [data-lang="zh"]{display:none}
+    body.lang-en [data-lang="en"]{display:block}
   </style>
 </head>
 <body>
@@ -189,10 +202,19 @@
         xclaw
       </a>
       <div class="nav-r">
-        <a href="#features">Features</a>
-        <a href="#demo">Demo</a>
-        <a href="#modes">Modes</a>
-        <a href="#install">Install</a>
+        <a href="#features" data-lang="zh">特性</a>
+        <a href="#features" data-lang="en">Features</a>
+        <a href="#demo" data-lang="zh">演示</a>
+        <a href="#demo" data-lang="en">Demo</a>
+        <a href="#modes" data-lang="zh">模式</a>
+        <a href="#modes" data-lang="en">Modes</a>
+        <a href="#install" data-lang="zh">安装</a>
+        <a href="#install" data-lang="en">Install</a>
+        <button class="lang-switch" onclick="toggleLanguage()">
+          <span data-lang="zh">中文</span><span data-lang="en">CN</span>
+          <span class="divider">/</span>
+          <span data-lang="zh">EN</span><span data-lang="en" class="active">English</span>
+        </button>
         <a href="https://github.com/YuanyuanMa03/xclaw" target="_blank" class="gh-btn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
           GitHub
@@ -212,15 +234,20 @@
  ██╔╝ ██╗╚██████╗███████╗██║  ██║╚███╔███╔╝
  ╚═╝  ╚═╝ ╚═════╝╚══════╝╚═╝  ╚═╝ ╚══╝╚══╝</pre>
 
-        <h1>Beyond the Boundary of<br><span class="g">Human and AI</span></h1>
-        <p class="hero-sub">AI 不只是服务你，<em>你也要听从 AI 的建议</em></p>
-        <p class="hero-desc">具有强烈个人品牌特色的 AI 编程 CLI — 它不只是工具，是你的协作伙伴</p>
+        <h1 data-lang="zh">超越人类与 AI 的<br><span class="g">边界</span></h1>
+        <h1 data-lang="en">Beyond the Boundary of<br><span class="g">Human and AI</span></h1>
+        <p class="hero-sub" data-lang="zh">AI 不只是服务你，<em>你也要听从 AI 的建议</em></p>
+        <p class="hero-sub" data-lang="en">AI doesn't just serve you, <em>you also listen to AI's advice</em></p>
+        <p class="hero-desc" data-lang="zh">具有强烈个人品牌特色的 AI 编程 CLI — 它不只是工具，是你的协作伙伴</p>
+        <p class="hero-desc" data-lang="en">AI programming CLI with a strong personal brand — it's not just your tool, it's your collaborative partner</p>
 
         <div class="badges">
           <span class="badge">v<b>1.0.0</b></span>
           <span class="badge">TypeScript + Bun</span>
-          <span class="badge"><b>7</b> API Providers</span>
-          <span class="badge"><b>6</b> Built-in Modes</span>
+          <span class="badge" data-lang="zh"><b>7</b> 大模型供应商</span>
+          <span class="badge" data-lang="en"><b>7</b> API Providers</span>
+          <span class="badge" data-lang="zh"><b>6</b> 种内置模式</span>
+          <span class="badge" data-lang="en"><b>6</b> Built-in Modes</span>
           <span class="badge">Agent Loop</span>
         </div>
 
@@ -240,8 +267,10 @@
         </div>
 
         <div class="hero-cta">
-          <a href="#install" class="btn btn-amber">Get Started →</a>
-          <a href="#features" class="btn btn-ghost">Explore Features</a>
+          <a href="#install" class="btn btn-amber" data-lang="zh">开始使用 →</a>
+          <a href="#install" class="btn btn-amber" data-lang="en">Get Started →</a>
+          <a href="#features" class="btn btn-ghost" data-lang="zh">探索特性</a>
+          <a href="#features" class="btn btn-ghost" data-lang="en">Explore Features</a>
         </div>
       </div>
     </div>
@@ -251,15 +280,20 @@
   <section id="features">
     <div class="wrap">
       <div class="fu">
-        <p class="sec-lbl">// Features</p>
-        <h2 class="sec-title">不只是代码补全</h2>
-        <p class="sec-desc">xclaw 重新定义了人机协作 — AI 有权利质疑你的决策，主动建议更好的方案，与你平等对话。</p>
+        <p class="sec-lbl" data-lang="zh">// 特性</p>
+        <p class="sec-lbl" data-lang="en">// Features</p>
+        <h2 class="sec-title" data-lang="zh">不只是代码补全</h2>
+        <h2 class="sec-title" data-lang="en">More Than Code Completion</h2>
+        <p class="sec-desc" data-lang="zh">xclaw 重新定义了人机协作 — AI 有权利质疑你的决策，主动建议更好的方案，与你平等对话。</p>
+        <p class="sec-desc" data-lang="en">xclaw redefines human-AI collaboration — AI has the right to question your decisions, proactively suggest better approaches, and engage in equal dialogue with you.</p>
       </div>
       <div class="feat-grid">
         <div class="feat fu">
           <div class="feat-ico" style="background:rgba(245,158,11,.1)">🎭</div>
-          <h3>6 种人格模式</h3>
-          <p>从温柔鼓励到犀利分析，从代码牛马到超级 AI。每种模式切换性格、工具、UI、权限。支持自定义 YAML 模式。</p>
+          <h3 data-lang="zh">6 种人格模式</h3>
+          <h3 data-lang="en">6 Personality Modes</h3>
+          <p data-lang="zh">从温柔鼓励到犀利分析，从代码牛马到超级 AI。每种模式切换性格、工具、UI、权限。支持自定义 YAML 模式。</p>
+          <p data-lang="en">From gentle encouragement to sharp analysis, from workhorse to super AI. Each mode switches personality, tools, UI, and permissions. Supports custom YAML modes.</p>
         </div>
         <div class="feat fu">
           <div class="feat-ico" style="background:rgba(0,255,170,.08)">🔪</div>
@@ -496,6 +530,38 @@ Ctrl+M cycle modes</code>
 
     // Copy button
     function copyInstall(){const cmd=document.getElementById('install-cmd').textContent;navigator.clipboard.writeText(cmd).then(()=>{const b=document.querySelector('.copy-btn');b.textContent='Copied!';b.classList.add('copied');setTimeout(()=>{b.textContent='Copy';b.classList.remove('copied')},2000)})}
+
+    // Language switcher
+    function toggleLanguage(){
+      const body=document.body;
+      const isEn=body.classList.contains('lang-en');
+      if(isEn){
+        body.classList.remove('lang-en');
+        localStorage.setItem('xclaw-lang','zh');
+      }else{
+        body.classList.add('lang-en');
+        localStorage.setItem('xclaw-lang','en');
+      }
+    }
+
+    // Initialize language from localStorage or browser
+    (function(){
+      const savedLang=localStorage.getItem('xclaw-lang');
+      if(savedLang==='en'){
+        document.body.classList.add('lang-en');
+      }else if(savedLang==='zh'){
+        document.body.classList.remove('lang-en');
+      }else{
+        // Auto-detect from browser
+        const browserLang=navigator.language||navigator.userLanguage;
+        if(browserLang.startsWith('en')){
+          document.body.classList.add('lang-en');
+          localStorage.setItem('xclaw-lang','en');
+        }else{
+          localStorage.setItem('xclaw-lang','zh');
+        }
+      }
+    })();
   </script>
 </body>
 </html>
