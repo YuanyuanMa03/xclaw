@@ -33,7 +33,7 @@ else
 fi
 
 # Install dir
-INSTALL_DIR="${XCLAW_DIR:-$HOME/xclaw}"
+INSTALL_DIR="${XCLAW_DIR:-$HOME/.xclaw-src}"
 
 # Clone or update
 echo ""

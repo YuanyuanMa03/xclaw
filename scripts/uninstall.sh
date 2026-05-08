@@ -5,7 +5,7 @@ echo ""
 echo "🗑️  Uninstalling xclaw..."
 echo ""
 
-INSTALL_DIR="${XCLAW_DIR:-$HOME/xclaw}"
+INSTALL_DIR="${XCLAW_DIR:-$HOME/.xclaw-src}"
 BIN_DIR="$HOME/.local/bin"
 
 # Remove global link

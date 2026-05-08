@@ -59,7 +59,7 @@ if (-not $HAS_BUN -and -not $HAS_NODE) {
 }
 
 # Clone repo
-$INSTALL_DIR = "$env:USERPROFILE\xclaw"
+$INSTALL_DIR = "$env:USERPROFILE\.xclaw-src"
 Write-Host ""
 Write-Host "📥 克隆仓库到 $INSTALL_DIR..."
 

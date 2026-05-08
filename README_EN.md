@@ -32,15 +32,15 @@ xclaw is an AI programming CLI tool with strong personal branding. It's not just
 
 ## Quick Start
 
-### One-command install (macOS / Linux)
+### npm install (recommended)
 
-Requires [Bun](https://bun.sh) (recommended) or Node.js >= 18.
+Requires Node.js >= 18 or [Bun](https://bun.sh).
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/YuanyuanMa03/xclaw/main/scripts/install.sh)
+npm install -g xclaw-cli
 ```
 
-After installation, open a new terminal:
+After installation:
 
 ```bash
 xclaw              # Start
@@ -48,6 +48,14 @@ xclaw --version    # 1.0.0 (xclaw)
 ```
 
 First time? Run `/login` to configure your API.
+
+### Install from source (macOS / Linux)
+
+Requires [Bun](https://bun.sh) (recommended) or Node.js >= 18.
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/YuanyuanMa03/xclaw/main/scripts/install.sh)
+```
 
 ### Windows
 
@@ -60,6 +68,10 @@ cd xclaw
 ### Uninstall
 
 ```bash
+# npm install
+npm uninstall -g xclaw-cli
+
+# Source install
 bash <(curl -fsSL https://raw.githubusercontent.com/YuanyuanMa03/xclaw/main/scripts/uninstall.sh)
 ```
 
@@ -201,8 +213,12 @@ docker run -p 8080:8080 YuanyuanMa03/xclaw-rcs
 ### Manual Uninstall
 
 ```bash
+# npm install
+npm uninstall -g xclaw-cli
+
+# Source install
 sudo rm /usr/local/bin/xclaw        # macOS/Linux
-rm -rf ~/xclaw                       # Source directory
+rm -rf ~/.xclaw-src                  # Source directory
 rm -rf ~/.xclaw                      # Config files
 ```
 

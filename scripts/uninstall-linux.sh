@@ -25,7 +25,7 @@ else
 fi
 
 # Ask about source directory
-SOURCE_DIR="$HOME/xclaw"
+SOURCE_DIR="$HOME/.xclaw-src"
 if [ -d "$SOURCE_DIR" ]; then
   echo ""
   read -p "是否删除源码目录 $SOURCE_DIR? (y/N): " -n 1 -r

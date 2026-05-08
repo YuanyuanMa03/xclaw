@@ -25,7 +25,7 @@ if ($currentPath -like "*$installDir*") {
 }
 
 # Ask about source directory
-$sourceDir = "$env:USERPROFILE\xclaw"
+$sourceDir = "$env:USERPROFILE\.xclaw-src"
 if (Test-Path $sourceDir) {
     Write-Host ""
     $confirm = Read-Host "是否删除源码目录 $sourceDir? (y/N)"

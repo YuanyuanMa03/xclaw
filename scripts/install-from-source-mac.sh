@@ -46,7 +46,7 @@ if command -v node &> /dev/null; then
 fi
 
 # Clone repo
-INSTALL_DIR="$HOME/xclaw"
+INSTALL_DIR="$HOME/.xclaw-src"
 echo ""
 echo "📥 克隆仓库到 $INSTALL_DIR..."
 

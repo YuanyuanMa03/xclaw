@@ -1,5 +1,5 @@
 {
-  "name": "xclaw",
+  "name": "xclaw-cli",
   "version": "1.0.0",
   "description": "xclaw — 超越人类与 AI 边界的 AI 编程 CLI",
   "type": "module",
@@ -21,7 +21,8 @@
     "repl"
   ],
   "engines": {
-    "bun": ">=1.3.0"
+    "bun": ">=1.3.0",
+    "node": ">=18.0.0"
   },
   "bin": {
     "xclaw": "dist/cli-node.js",
@@ -45,13 +46,13 @@
     "build:bun": "bun run build.ts",
     "dev": "bun run scripts/dev.ts",
     "dev:inspect": "bun run scripts/dev-debug.ts",
-    "prepublishOnly": "bun run build:vite",
+    "prepublishOnly": "bun run build",
     "lint": "biome lint .",
     "lint:fix": "biome lint --fix .",
     "format": "biome format --write .",
     "check": "biome check .",
     "check:fix": "biome check --fix .",
-    "prepare": "husky",
+    "prepare": "test -d .git && husky || true",
     "test": "bun test",
     "test:production": "bun run scripts/production-test.ts",
     "test:production:offline": "bun run scripts/production-test.ts --offline",
@@ -228,6 +229,6 @@
       "biome format --write --no-errors-on-unmatched"
     ]
   },
-  "license": "SEE LICENSE IN README",
+  "license": "SEE LICENSE IN LICENSE",
   "main": "dist/cli-node.js"
 }
