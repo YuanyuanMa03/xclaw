@@ -1,6 +1,6 @@
 {
   "name": "xclaw-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "xclaw — 超越人类与 AI 边界的 AI 编程 CLI",
   "type": "module",
   "author": "xclaw <xclaw@users.noreply.github.com>",
