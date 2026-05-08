@@ -31,6 +31,7 @@ import {
 } from '../utils/effort.js'
 import {
   getClaudeConfigHomeDir,
+  getProjectDotDir,
   isBareMode,
   isEnvTruthy,
 } from '../utils/envUtils.js'
@@ -85,7 +86,7 @@ export function getSkillsPath(
     case 'userSettings':
       return join(getClaudeConfigHomeDir(), dir)
     case 'projectSettings':
-      return `.claude/${dir}`
+      return `${getProjectDotDir()}/${dir}`
     case 'plugin':
       return 'plugin'
     default:
@@ -874,7 +875,7 @@ export async function discoverSkillDirsForPaths(
     // CWD-level skills are already loaded at startup, so we only discover nested ones
     // Use prefix+separator check to avoid matching /project-backup when cwd is /project
     while (currentDir.startsWith(resolvedCwd + pathSep)) {
-      const skillDir = join(currentDir, '.claude', 'skills')
+      const skillDir = join(currentDir, getProjectDotDir(currentDir), 'skills')
 
       // Skip if we've already checked this path (hit or miss) — avoids
       // repeating the same failed stat on every Read/Write/Edit call when

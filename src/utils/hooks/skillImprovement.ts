@@ -13,6 +13,7 @@ import {
   isLangfuseEnabled,
 } from '../../services/langfuse/index.js'
 import { getSessionId } from '../../bootstrap/state.js'
+import { getProjectDotDir } from '../envUtils.js'
 import { getAPIProvider } from '../model/providers.js'
 import { getEmptyToolPermissionContext } from '../../Tool.js'
 import type { Message } from '../../types/message.js'
@@ -212,7 +213,13 @@ export async function applySkillImprovement(
   const fs = await import('fs/promises')
 
   // Skills live at .claude/skills/<name>/SKILL.md relative to CWD
-  const filePath = join(getCwd(), '.claude', 'skills', skillName, 'SKILL.md')
+  const filePath = join(
+    getCwd(),
+    getProjectDotDir(getCwd()),
+    'skills',
+    skillName,
+    'SKILL.md',
+  )
 
   let currentContent: string
   try {

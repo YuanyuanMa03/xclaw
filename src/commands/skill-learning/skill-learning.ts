@@ -1,6 +1,9 @@
 import { join } from 'node:path'
 import type { LocalCommandCall } from '../../types/command.js'
-import { getClaudeConfigHomeDir } from '../../utils/envUtils.js'
+import {
+  getClaudeConfigHomeDir,
+  getProjectDotDir,
+} from '../../utils/envUtils.js'
 import {
   analyzeObservations,
   applySkillLifecycleDecision,
@@ -85,7 +88,7 @@ export const call: LocalCommandCall = async (
       if (generate) {
         for (const draft of drafts) {
           const roots = [
-            join(process.cwd(), '.claude', 'skills'),
+            join(process.cwd(), getProjectDotDir(), 'skills'),
             join(getClaudeConfigHomeDir(), 'skills'),
           ]
           const existing = await compareExistingSkills(draft, roots)

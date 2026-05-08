@@ -1,7 +1,10 @@
 import { mkdir, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
-import { getClaudeConfigHomeDir } from '../../utils/envUtils.js'
+import {
+  getClaudeConfigHomeDir,
+  getProjectDotDir,
+} from '../../utils/envUtils.js'
 import { clearCommandsCache } from '../../commands.js'
 import type { Instinct } from './instinctParser.js'
 import { normalizeSkillName } from './learningPolicy.js'
@@ -76,7 +79,8 @@ export function getLearnedCommandPath(
 ): string {
   if (options?.outputRoot) return options.outputRoot
   if (scope === 'project') {
-    return join(options?.cwd ?? process.cwd(), '.claude', 'commands')
+    const cwd = options?.cwd ?? process.cwd()
+    return join(cwd, getProjectDotDir(cwd), 'commands')
   }
   return (
     options?.globalCommandsDir ?? join(getClaudeConfigHomeDir(), 'commands')

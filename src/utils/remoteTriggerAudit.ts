@@ -2,8 +2,11 @@ import { randomUUID } from 'crypto'
 import { mkdir, readFile, appendFile } from 'fs/promises'
 import { dirname, join } from 'path'
 import { getProjectRoot } from '../bootstrap/state.js'
+import { getProjectDotDir } from './envUtils.js'
 
-const REMOTE_TRIGGER_AUDIT_REL = join('.claude', 'remote-trigger-audit.jsonl')
+function getRemoteTriggerAuditRel(): string {
+  return join(getProjectDotDir(getProjectRoot()), 'remote-trigger-audit.jsonl')
+}
 const MAX_AUDIT_RECORDS = 200
 
 export type RemoteTriggerAuditRecord = {
@@ -19,7 +22,7 @@ export type RemoteTriggerAuditRecord = {
 export function resolveRemoteTriggerAuditPath(
   rootDir: string = getProjectRoot(),
 ): string {
-  return join(rootDir, REMOTE_TRIGGER_AUDIT_REL)
+  return join(rootDir, getRemoteTriggerAuditRel())
 }
 
 export async function appendRemoteTriggerAuditRecord(

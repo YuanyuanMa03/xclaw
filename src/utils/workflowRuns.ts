@@ -1,9 +1,12 @@
 import { readdir, readFile } from 'fs/promises'
 import { join } from 'path'
 import { getProjectRoot } from '../bootstrap/state.js'
+import { getProjectDotDir } from './envUtils.js'
 import { safeParseJSON } from './json.js'
 
-const WORKFLOW_RUNS_REL = join('.claude', 'workflow-runs')
+function getWorkflowRunsRel(): string {
+  return join(getProjectDotDir(getProjectRoot()), 'workflow-runs')
+}
 const MAX_WORKFLOW_RUNS = 200
 
 const WORKFLOW_RUN_STATUSES = ['running', 'completed', 'cancelled'] as const
@@ -103,7 +106,7 @@ async function readWorkflowRun(
   try {
     const parsed = safeParseJSON(
       await readFile(
-        join(rootDir, WORKFLOW_RUNS_REL, `${runId}.json`),
+        join(rootDir, getWorkflowRunsRel(), `${runId}.json`),
         'utf-8',
       ),
       false,
@@ -119,7 +122,7 @@ export async function listWorkflowRuns(
 ): Promise<WorkflowRunRecord[]> {
   let files: string[]
   try {
-    files = await readdir(join(rootDir, WORKFLOW_RUNS_REL))
+    files = await readdir(join(rootDir, getWorkflowRunsRel()))
   } catch {
     return []
   }

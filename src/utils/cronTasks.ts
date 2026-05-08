@@ -20,6 +20,7 @@ import {
   removeSessionCronTasks,
 } from '../bootstrap/state.js'
 import { computeNextCronRun, parseCronExpression } from './cron.js'
+import { getProjectDotDir } from './envUtils.js'
 import { logForDebugging } from './debug.js'
 import { isFsInaccessible } from './errors.js'
 import { getFsImplementation } from './fsOperations.js'
@@ -71,7 +72,9 @@ export type CronTask = {
 
 type CronFile = { tasks: CronTask[] }
 
-const CRON_FILE_REL = join('.claude', 'scheduled_tasks.json')
+function getCronFileRel(dir?: string): string {
+  return join(getProjectDotDir(dir ?? getProjectRoot()), 'scheduled_tasks.json')
+}
 
 /**
  * Path to the cron file. `dir` defaults to getProjectRoot() — pass it
@@ -79,7 +82,7 @@ const CRON_FILE_REL = join('.claude', 'scheduled_tasks.json')
  * SDK daemon, which has no bootstrap state).
  */
 export function getCronFilePath(dir?: string): string {
-  return join(dir ?? getProjectRoot(), CRON_FILE_REL)
+  return join(dir ?? getProjectRoot(), getCronFileRel(dir))
 }
 
 /**
@@ -167,7 +170,7 @@ export async function writeCronTasks(
   dir?: string,
 ): Promise<void> {
   const root = dir ?? getProjectRoot()
-  await mkdir(join(root, '.claude'), { recursive: true })
+  await mkdir(join(root, getProjectDotDir(root)), { recursive: true })
   // Strip the runtime-only `durable` flag — everything on disk is durable
   // by definition, and keeping the flag out means readCronTasks() naturally
   // yields durable: undefined without having to set it explicitly.

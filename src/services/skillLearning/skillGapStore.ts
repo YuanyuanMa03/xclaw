@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import { createHash } from 'node:crypto'
 import { dirname, join } from 'node:path'
+import { getProjectDotDir } from '../../utils/envUtils.js'
 import type { SearchResult } from '../skillSearch/localSearch.js'
 import { createInstinct, type StoredInstinct } from './instinctParser.js'
 import {
@@ -247,9 +248,10 @@ async function writeSkillGapDraft(
   project: SkillLearningProjectContext,
 ): Promise<SkillGapMaterialization> {
   const instinct = createGapInstinct(gap, 'pending')
+  const projectDir = project.projectRoot ?? project.cwd
   const draftsRoot = join(
-    project.projectRoot ?? project.cwd,
-    '.claude',
+    projectDir,
+    getProjectDotDir(projectDir),
     'skills',
     '.drafts',
   )

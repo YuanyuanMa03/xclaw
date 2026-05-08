@@ -13,6 +13,7 @@ import {
 import ignore from 'ignore'
 import { basename, dirname, join } from 'path'
 import { saveCurrentProjectConfig } from './config.js'
+import { getProjectDotDir } from './envUtils.js'
 import { getCwd } from './cwd.js'
 import { logForDebugging } from './debug.js'
 import { errorMessage, getErrnoCode } from './errors.js'
@@ -202,7 +203,7 @@ const GIT_NO_PROMPT_ENV = {
 }
 
 function worktreesDir(repoRoot: string): string {
-  return join(repoRoot, '.claude', 'worktrees')
+  return join(repoRoot, getProjectDotDir(repoRoot), 'worktrees')
 }
 
 // Flatten nested slugs (`user/feature` → `user+feature`) for both the branch
