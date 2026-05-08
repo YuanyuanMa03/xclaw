@@ -87,7 +87,33 @@ fi
 echo ""
 echo "🔗 全局安装..."
 
-INSTALL_BIN="/usr/local/bin"
+# Try /usr/local/bin first, fallback to ~/.local/bin
+if [ -w "/usr/local/bin" ]; then
+  INSTALL_BIN="/usr/local/bin"
+else
+  INSTALL_BIN="$HOME/.local/bin"
+  mkdir -p "$INSTALL_BIN"
+  echo "⚠️  /usr/local/bin 无写入权限，安装到 $INSTALL_BIN"
+
+  # Ensure PATH
+  SHELL_RC=""
+  if [ -n "$ZSH_VERSION" ] || [ -f "$HOME/.zshrc" ]; then
+    SHELL_RC="$HOME/.zshrc"
+  elif [ -f "$HOME/.bashrc" ]; then
+    SHELL_RC="$HOME/.bashrc"
+  fi
+
+  if [[ ":$PATH:" != *":$INSTALL_BIN:"* ]]; then
+    if [ -n "$SHELL_RC" ]; then
+      echo '' >> "$SHELL_RC"
+      echo '# xclaw' >> "$SHELL_RC"
+      echo "export PATH=\"$INSTALL_BIN:\$PATH\"" >> "$SHELL_RC"
+    fi
+    export PATH="$INSTALL_BIN:$PATH"
+    echo "✅ 已添加 $INSTALL_BIN 到 PATH（重启终端生效）"
+  fi
+fi
+
 ln -sf "$INSTALL_DIR/dist/cli-node.js" "$INSTALL_BIN/xclaw"
 chmod +x "$INSTALL_DIR/dist/cli-node.js"
 

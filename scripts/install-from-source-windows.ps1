@@ -28,28 +28,35 @@ try {
 # Check for Bun (preferred) or Node.js
 $HAS_BUN = $false
 try {
-    $bunVer = bun --version
-    $HAS_BUN = $true
-    Write-Host "✅ Bun $bunVer"
+    $bunVer = bun --version 2>$null
+    if ($LASTEXITCODE -eq 0) {
+        $HAS_BUN = $true
+        Write-Host "✅ Bun $bunVer"
+    }
 } catch {
-    # Bun not found, check Node.js
+    $HAS_BUN = $false
 }
 
-if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+$HAS_NODE = $false
+if (Get-Command node -ErrorAction SilentlyContinue) {
+    $nodeVer = node -v
+    $major = [int]($nodeVer -replace 'v(\d+).*', '$1')
+    if ($major -ge 18) {
+        $HAS_NODE = $true
+        Write-Host "✅ Node.js $nodeVer"
+    } else {
+        Write-Host "⚠️  Node.js 版本过低 (需要 >= 18, 当前: $nodeVer)"
+    }
+}
+
+if (-not $HAS_BUN -and -not $HAS_NODE) {
+    Write-Host ""
     Write-Host "❌ 需要 Node.js >= 18 或 Bun"
     Write-Host "   安装 Node: https://nodejs.org"
     Write-Host "   或运行: winget install OpenJS.NodeJS.LTS"
     Write-Host "   安装 Bun: powershell -c `"irm bun.sh/install.ps1 | iex`""
     exit 1
 }
-
-$nodeVer = node -v
-$major = [int]($nodeVer -replace 'v(\d+).*', '$1')
-if ($major -lt 18 -and -not $HAS_BUN) {
-    Write-Host "❌ Node.js 版本过低 (需要 >= 18, 当前: $nodeVer)"
-    exit 1
-}
-Write-Host "✅ Node.js $nodeVer"
 
 # Clone repo
 $INSTALL_DIR = "$env:USERPROFILE\xclaw"

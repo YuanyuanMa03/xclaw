@@ -49,11 +49,22 @@ xclaw --version    # 1.0.0 (xclaw)
 
 ### Windows
 
+需要 [Git](https://git-scm.com/download/win) 和 [Bun](https://bun.sh)（推荐）或 Node.js >= 18。
+
+```powershell
+# 一键安装（管理员终端运行）
+Set-ExecutionPolicy Bypass -Scope Process -Force; irm https://raw.githubusercontent.com/YuanyuanMa03/xclaw/main/scripts/install-from-source-windows.ps1 | iex
+```
+
+如果无法执行远程脚本，可手动安装：
+
 ```powershell
 git clone https://github.com/YuanyuanMa03/xclaw.git
 cd xclaw
 .\scripts\install-from-source-windows.ps1
 ```
+
+安装完成后**重新打开终端**，运行 `xclaw` 启动。
 
 ### 卸载
 
