@@ -57,13 +57,15 @@
     .hero-desc{font-size:.95rem;color:var(--tx3);margin-bottom:40px}
 
     /* Install block */
-    .install{display:inline-flex;flex-direction:column;align-items:stretch;text-align:left;background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.15);border-radius:16px;padding:24px 28px;margin-bottom:40px;min-width:min(500px,90vw)}
+    .install{display:inline-flex;flex-direction:column;align-items:stretch;text-align:left;background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.15);border-radius:16px;padding:24px 28px;margin-bottom:16px;min-width:min(500px,90vw)}
     .install .lbl{font-family:var(--mono);font-size:.72rem;color:var(--amber);text-transform:uppercase;letter-spacing:.15em;margin-bottom:12px}
     .install-row{display:flex;align-items:center;gap:12px}
     .install code{flex:1;font-family:var(--mono);font-size:.88rem;color:var(--neon);background:rgba(0,0,0,.4);padding:14px 18px;border-radius:10px;white-space:nowrap;overflow-x:auto}
     .copy-btn{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);color:var(--amber);font-family:var(--mono);font-size:.78rem;padding:10px 16px;border-radius:8px;cursor:pointer;transition:all .2s;white-space:nowrap}
     .copy-btn:hover{background:rgba(245,158,11,.2)}
     .copy-btn.copied{color:var(--neon);border-color:rgba(0,255,170,.3);background:rgba(0,255,170,.08)}
+    .install-alt{font-size:.78rem;color:var(--tx3);text-align:center;padding:8px 0}
+    .install-alt code{display:inline;font-size:.78rem;padding:2px 6px;background:rgba(0,0,0,.3);color:var(--amber)}
 
     .hero-cta{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:32px}
     .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:14px;font-weight:600;font-size:.95rem;cursor:pointer;border:none;transition:all .3s;font-family:var(--sans)}
@@ -133,6 +135,16 @@
     .footer-links a{color:var(--tx2);font-size:.85rem;transition:color .2s}
     .footer-links a:hover{color:var(--amber)}
 
+    /* Demo Section */
+    .demo{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:48px;overflow:hidden}
+    .demo-gif{width:100%;max-width:900px;margin:0 auto 32px;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+    .demo-gif img{width:100%;height:auto;display:block}
+    .demo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
+    .demo-img{background:var(--card);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;transition:all .3s}
+    .demo-img:hover{transform:translateY(-5px);border-color:var(--bdr-h)}
+    .demo-img img{width:100%;height:auto;display:block}
+    .demo-caption{font-size:.78rem;color:var(--tx3);text-align:center;padding:12px}
+
     /* Fade */
     .fu{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s cubic-bezier(.4,0,.2,1)}
     .fu.v{opacity:1;transform:translateY(0)}
@@ -159,6 +171,7 @@
       </a>
       <div class="nav-r">
         <a href="#features">Features</a>
+        <a href="#demo">Demo</a>
         <a href="#modes">Modes</a>
         <a href="#install">Install</a>
         <a href="https://github.com/YuanyuanMa03/xclaw" target="_blank" class="gh-btn">
@@ -193,11 +206,18 @@
         </div>
 
         <div class="install">
-          <div class="lbl">⚡ Quick Install</div>
+          <div class="lbl">⚡ Quick Install (Recommended)</div>
           <div class="install-row">
-            <code id="install-cmd">bash <(curl -fsSL https://raw.githubusercontent.com/YuanyuanMa03/xclaw/main/scripts/install.sh)</code>
+            <code id="install-cmd">npm install -g xclaw-cli</code>
             <button class="copy-btn" onclick="copyInstall()">Copy</button>
           </div>
+          <div class="install-alt">
+            Or use install script: <code>bash <(curl -fsSL https://raw.githubusercontent.com/YuanyuanMa03/xclaw/main/scripts/install.sh)</code>
+          </div>
+        </div>
+
+        <div class="demo-gif">
+          <img src="assets/xclaw-demo.gif" alt="xclaw Demo GIF" loading="lazy">
         </div>
 
         <div class="hero-cta">
@@ -261,6 +281,33 @@
           <div class="feat-ico" style="background:rgba(255,68,136,.08)">💰</div>
           <h3>Poor Mode</h3>
           <p>省 Token 模式 — 关闭记忆提取和键入建议，显著减少 API 消耗。穷鬼也能用 AI。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo -->
+  <section id="demo">
+    <div class="wrap">
+      <div class="fu">
+        <p class="sec-lbl">// Demo</p>
+        <h2 class="sec-title">看到 xclaw 在行动</h2>
+        <p class="sec-desc">真实的终端界面、模式切换和交互式编程体验。</p>
+      </div>
+      <div class="demo fu">
+        <div class="demo-grid">
+          <div class="demo-img">
+            <img src="assets/demo-terminal.png" alt="Terminal Interface" loading="lazy">
+            <div class="demo-caption">终端界面</div>
+          </div>
+          <div class="demo-img">
+            <img src="assets/demo-modes.png" alt="Mode Switching" loading="lazy">
+            <div class="demo-caption">模式切换</div>
+          </div>
+          <div class="demo-img">
+            <img src="assets/demo-interaction.png" alt="Interactive Programming" loading="lazy">
+            <div class="demo-caption">交互式编程</div>
+          </div>
         </div>
       </div>
     </div>
@@ -373,12 +420,9 @@
       <div class="steps-grid">
         <div class="step fu">
           <span class="step-num">01</span>
-          <h3>安装</h3>
-          <p>一键安装脚本，自动配置环境。需要 Bun 或 Node.js ≥ 18。</p>
-          <code>bash <(curl -fsSL \
-  https://raw.githubusercontent.com/\
-YuanyuanMa03/xclaw/main/\
-scripts/install.sh)</code>
+          <h3>安装 (推荐 npm)</h3>
+          <p>使用 npm 全局安装，或使用一键安装脚本。需要 Node.js ≥ 18。</p>
+          <code>npm install -g xclaw-cli</code>
         </div>
         <div class="step fu">
           <span class="step-num">02</span>
