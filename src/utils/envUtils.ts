@@ -1,3 +1,4 @@
+import { existsSync } from 'fs'
 import memoize from 'lodash-es/memoize.js'
 import { homedir } from 'os'
 import { join } from 'path'
@@ -15,9 +16,26 @@ export const getClaudeConfigHomeDir = memoize(
 
 export const getXclawConfigHomeDir = memoize(
   (): string => {
-    return join(homedir(), '.xclaw').normalize('NFC')
+    return (
+      process.env.XCLAW_CONFIG_DIR ?? join(homedir(), '.xclaw')
+    ).normalize('NFC')
   },
-  () => '',
+  () => process.env.XCLAW_CONFIG_DIR,
+)
+
+/**
+ * Get the project-level dot directory name.
+ * Priority: .claude/ (share with Claude Code) → .xclaw/ → default .xclaw/
+ * Memoized per cwd to avoid repeated existsSync on hot paths.
+ */
+export const getProjectDotDir = memoize(
+  (projectCwd?: string): '.xclaw' | '.claude' => {
+    const cwd = projectCwd || process.cwd()
+    if (existsSync(join(cwd, '.claude'))) return '.claude'
+    if (existsSync(join(cwd, '.xclaw'))) return '.xclaw'
+    return '.xclaw'
+  },
+  (projectCwd?: string) => projectCwd || process.cwd(),
 )
 
 export function getTeamsDir(): string {

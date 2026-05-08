@@ -55,8 +55,11 @@ export type PermissionBehavior = 'allow' | 'deny' | 'ask'
  */
 export type PermissionRuleSource =
   | 'userSettings'
+  | 'xclawUserSettings'
   | 'projectSettings'
+  | 'xclawProjectSettings'
   | 'localSettings'
+  | 'xclawLocalSettings'
   | 'flagSettings'
   | 'policySettings'
   | 'cliArg'
@@ -89,8 +92,11 @@ export type PermissionRule = {
  */
 export type PermissionUpdateDestination =
   | 'userSettings'
+  | 'xclawUserSettings'
   | 'projectSettings'
+  | 'xclawProjectSettings'
   | 'localSettings'
+  | 'xclawLocalSettings'
   | 'session'
   | 'cliArg'
 

@@ -48,9 +48,12 @@ export function AgentsMenu({ tools, onExit }: Props): React.ReactNode {
     () => ({
       'built-in': allAgents.filter(a => a.source === 'built-in'),
       userSettings: allAgents.filter(a => a.source === 'userSettings'),
+      xclawUserSettings: allAgents.filter(a => a.source === 'xclawUserSettings'),
       projectSettings: allAgents.filter(a => a.source === 'projectSettings'),
+      xclawProjectSettings: allAgents.filter(a => a.source === 'xclawProjectSettings'),
       policySettings: allAgents.filter(a => a.source === 'policySettings'),
       localSettings: allAgents.filter(a => a.source === 'localSettings'),
+      xclawLocalSettings: allAgents.filter(a => a.source === 'xclawLocalSettings'),
       flagSettings: allAgents.filter(a => a.source === 'flagSettings'),
       plugin: allAgents.filter(a => a.source === 'plugin'),
       all: allAgents,

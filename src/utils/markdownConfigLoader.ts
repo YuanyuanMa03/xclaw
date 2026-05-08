@@ -10,7 +10,12 @@ import {
 } from 'src/services/analytics/index.js'
 import { getProjectRoot } from '../bootstrap/state.js'
 import { logForDebugging } from './debug.js'
-import { getClaudeConfigHomeDir, isEnvTruthy } from './envUtils.js'
+import {
+  getClaudeConfigHomeDir,
+  getProjectDotDir,
+  getXclawConfigHomeDir,
+  isEnvTruthy,
+} from './envUtils.js'
 import { isFsInaccessible } from './errors.js'
 import { normalizePathForComparison } from './file.js'
 import type { FrontmatterData } from './frontmatterParser.js'
@@ -250,18 +255,28 @@ export function getProjectDirsUpToHome(
       break
     }
 
-    const claudeSubdir = join(current, '.claude', subdir)
-    // Filter to existing dirs. This is a perf filter (avoids spawning
-    // ripgrep on non-existent dirs downstream) and the worktree fallback
-    // in loadMarkdownFilesForSubdir relies on it. statSync + explicit error
-    // handling instead of existsSync — re-throws unexpected errors rather
-    // than silently swallowing them. Downstream loadMarkdownFiles handles
-    // the TOCTOU window (dir disappearing before read) gracefully.
+    // Check both .claude/ and .xclaw/ at this directory level.
+    // getProjectDotDir returns the primary (.claude if it exists, else .xclaw),
+    // then we also check the other one as an overlay.
+    const primaryDotDir = getProjectDotDir(current)
+    const primarySubdir = join(current, primaryDotDir, subdir)
     try {
-      statSync(claudeSubdir)
-      dirs.push(claudeSubdir)
+      statSync(primarySubdir)
+      dirs.push(primarySubdir)
     } catch (e: unknown) {
       if (!isFsInaccessible(e)) throw e
+    }
+
+    // Also check the other dot dir (overlay)
+    const otherDotDir = primaryDotDir === '.claude' ? '.xclaw' : '.claude'
+    const otherSubdir = join(current, otherDotDir, subdir)
+    if (otherSubdir !== primarySubdir) {
+      try {
+        statSync(otherSubdir)
+        dirs.push(otherSubdir)
+      } catch (e: unknown) {
+        if (!isFsInaccessible(e)) throw e
+      }
     }
 
     // Stop after processing the git root directory - this prevents commands from parent
@@ -301,7 +316,11 @@ export const loadMarkdownFilesForSubdir = memoize(
   ): Promise<MarkdownFile[]> {
     const searchStartTime = Date.now()
     const userDir = join(getClaudeConfigHomeDir(), subdir)
-    const managedDir = join(getManagedFilePath(), '.claude', subdir)
+    const managedDir = join(
+      getManagedFilePath(),
+      getProjectDotDir(getManagedFilePath()),
+      subdir,
+    )
     const projectDirs = getProjectDirsUpToHome(subdir, cwd)
 
     // For git worktrees where the worktree does NOT have .claude/<subdir> checked
@@ -321,61 +340,87 @@ export const loadMarkdownFilesForSubdir = memoize(
     const canonicalRoot = findCanonicalGitRoot(cwd)
     if (gitRoot && canonicalRoot && canonicalRoot !== gitRoot) {
       const worktreeSubdir = normalizePathForComparison(
-        join(gitRoot, '.claude', subdir),
+        join(gitRoot, getProjectDotDir(gitRoot), subdir),
       )
       const worktreeHasSubdir = projectDirs.some(
         dir => normalizePathForComparison(dir) === worktreeSubdir,
       )
       if (!worktreeHasSubdir) {
-        const mainClaudeSubdir = join(canonicalRoot, '.claude', subdir)
+        const mainClaudeSubdir = join(
+          canonicalRoot,
+          getProjectDotDir(canonicalRoot),
+          subdir,
+        )
         if (!projectDirs.includes(mainClaudeSubdir)) {
           projectDirs.push(mainClaudeSubdir)
         }
       }
     }
 
-    const [managedFiles, userFiles, projectFilesNested] = await Promise.all([
-      // Always load managed (policy settings)
-      loadMarkdownFiles(managedDir).then(_ =>
-        _.map(file => ({
-          ...file,
-          baseDir: managedDir,
-          source: 'policySettings' as const,
-        })),
-      ),
-      // Conditionally load user files
-      isSettingSourceEnabled('userSettings') &&
-      !(subdir === 'agents' && isRestrictedToPluginOnly('agents'))
-        ? loadMarkdownFiles(userDir).then(_ =>
-            _.map(file => ({
-              ...file,
-              baseDir: userDir,
-              source: 'userSettings' as const,
-            })),
-          )
-        : Promise.resolve([]),
-      // Conditionally load project files from all directories up to home
-      isSettingSourceEnabled('projectSettings') &&
-      !(subdir === 'agents' && isRestrictedToPluginOnly('agents'))
-        ? Promise.all(
-            projectDirs.map(projectDir =>
-              loadMarkdownFiles(projectDir).then(_ =>
+    const xclawUserDir = join(getXclawConfigHomeDir(), subdir)
+
+    const [managedFiles, userFiles, xclawUserFiles, projectFilesNested] =
+      await Promise.all([
+        // Always load managed (policy settings)
+        loadMarkdownFiles(managedDir).then(_ =>
+          _.map(file => ({
+            ...file,
+            baseDir: managedDir,
+            source: 'policySettings' as const,
+          })),
+        ),
+        // Conditionally load user files
+        isSettingSourceEnabled('userSettings') &&
+        !(subdir === 'agents' && isRestrictedToPluginOnly('agents'))
+          ? loadMarkdownFiles(userDir).then(_ =>
+              _.map(file => ({
+                ...file,
+                baseDir: userDir,
+                source: 'userSettings' as const,
+              })),
+            )
+          : Promise.resolve([]),
+        // xclaw user files (~/.xclaw/{subdir})
+        isSettingSourceEnabled('userSettings')
+          ? loadMarkdownFiles(xclawUserDir)
+              .then(_ =>
                 _.map(file => ({
                   ...file,
-                  baseDir: projectDir,
-                  source: 'projectSettings' as const,
+                  baseDir: xclawUserDir,
+                  source: 'xclawUserSettings' as const,
                 })),
+              )
+              .catch(() => []) // xclaw dir may not exist
+          : Promise.resolve([]),
+        // Conditionally load project files from all directories up to home
+        isSettingSourceEnabled('projectSettings') &&
+        !(subdir === 'agents' && isRestrictedToPluginOnly('agents'))
+          ? Promise.all(
+              projectDirs.map(projectDir =>
+                loadMarkdownFiles(projectDir).then(_ =>
+                  _.map(file => ({
+                    ...file,
+                    baseDir: projectDir,
+                    source: projectDir.includes('.xclaw')
+                      ? ('xclawProjectSettings' as const)
+                      : ('projectSettings' as const),
+                  })),
+                ),
               ),
-            ),
-          )
-        : Promise.resolve([]),
-    ])
+            )
+          : Promise.resolve([]),
+      ])
 
     // Flatten nested project files array
     const projectFiles = projectFilesNested.flat()
 
-    // Combine all files with priority: managed > user > project
-    const allFiles = [...managedFiles, ...userFiles, ...projectFiles]
+    // Combine all files with priority: managed > user > xclawUser > project
+    const allFiles = [
+      ...managedFiles,
+      ...userFiles,
+      ...xclawUserFiles,
+      ...projectFiles,
+    ]
 
     // Deduplicate files that resolve to the same physical file (same inode).
     // This prevents the same file from appearing multiple times when ~/.claude is
@@ -413,6 +458,39 @@ export const loadMarkdownFilesForSubdir = memoize(
       )
     }
 
+    // Name-based dedup: when same relative path exists in both .claude/ and .xclaw/,
+    // keep the .xclaw/ version (xclaw wins on collision).
+    const nameSeen = new Map<string, number>() // relativePath -> index in nameDedupedFiles
+    const nameDedupedFiles: MarkdownFile[] = []
+
+    for (const file of deduplicatedFiles) {
+      // Compute relative path from baseDir (e.g. "foo/SKILL.md")
+      const relativePath = file.filePath
+        .slice(file.baseDir.length)
+        .replace(/^\//, '')
+      const existingIdx = nameSeen.get(relativePath)
+
+      if (existingIdx !== undefined) {
+        const existing = nameDedupedFiles[existingIdx]
+        // If current file is from .xclaw and existing is from .claude, replace
+        if (
+          file.baseDir.includes('.xclaw') &&
+          existing &&
+          !existing.baseDir.includes('.xclaw')
+        ) {
+          nameDedupedFiles[existingIdx] = file
+          logForDebugging(
+            `Name dedup: .xclaw '${relativePath}' overrides .claude version`,
+          )
+        }
+        // Otherwise skip (existing wins)
+        continue
+      }
+
+      nameSeen.set(relativePath, nameDedupedFiles.length)
+      nameDedupedFiles.push(file)
+    }
+
     logEvent(`tengu_dir_search`, {
       durationMs: Date.now() - searchStartTime,
       managedFilesFound: managedFiles.length,
@@ -423,7 +501,7 @@ export const loadMarkdownFilesForSubdir = memoize(
         subdir as AnalyticsMetadata_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS,
     })
 
-    return deduplicatedFiles
+    return nameDedupedFiles
   },
   // Custom resolver creates cache key from both subdir and cwd parameters
   (subdir: ClaudeConfigDirectory, cwd: string) => `${subdir}:${cwd}`,

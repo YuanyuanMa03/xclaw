@@ -17,7 +17,7 @@ import { checkStatsigFeatureGate_CACHED_MAY_BE_STALE } from '../../services/anal
 import type { AnyObject, Tool, ToolPermissionContext } from '../../Tool.js'
 import { FILE_READ_TOOL_NAME } from '@xclaw/builtin-tools/tools/FileReadTool/prompt.js'
 import { getCwd } from '../cwd.js'
-import { getClaudeConfigHomeDir } from '../envUtils.js'
+import { getClaudeConfigHomeDir, getProjectDotDir } from '../envUtils.js'
 import {
   getFsImplementation,
   getPathsForPermissionCheck,
@@ -76,6 +76,7 @@ export const DANGEROUS_DIRECTORIES = [
   '.vscode',
   '.idea',
   '.claude',
+  '.xclaw',
 ] as const
 
 /**
@@ -104,13 +105,14 @@ export function getClaudeSkillScope(
   const absolutePath = expandPath(filePath)
   const absolutePathLower = normalizeCaseForComparison(absolutePath)
 
+  const dotDir = getProjectDotDir(getOriginalCwd())
   const bases = [
     {
-      dir: expandPath(join(getOriginalCwd(), '.claude', 'skills')),
-      prefix: '/.claude/skills/',
+      dir: expandPath(join(getOriginalCwd(), dotDir, 'skills')),
+      prefix: `/${dotDir}/skills/`,
     },
     {
-      dir: expandPath(join(homedir(), '.claude', 'skills')),
+      dir: expandPath(join(getClaudeConfigHomeDir(), 'skills')),
       prefix: '~/.claude/skills/',
     },
   ]
@@ -209,9 +211,10 @@ export function isClaudeSettingsPath(filePath: string): boolean {
   // Use platform separator so endsWith checks work on both Unix (/) and Windows (\)
   if (
     normalizedPath.endsWith(`${sep}.claude${sep}settings.json`) ||
-    normalizedPath.endsWith(`${sep}.claude${sep}settings.local.json`)
+    normalizedPath.endsWith(`${sep}.claude${sep}settings.local.json`) ||
+    normalizedPath.endsWith(`${sep}.xclaw${sep}settings.json`) ||
+    normalizedPath.endsWith(`${sep}.xclaw${sep}settings.local.json`)
   ) {
-    // Include .claude/settings.json even for other projects
     return true
   }
   // Check for current project's settings files (including managed settings and CLI args)
@@ -230,9 +233,10 @@ function isClaudeConfigFilePath(filePath: string): boolean {
   // Check if file is within .claude/commands or .claude/agents directories
   // using proper path segment validation (not string matching with includes())
   // pathInWorkingPath now handles case-insensitive comparison to prevent bypasses
-  const commandsDir = join(getOriginalCwd(), '.claude', 'commands')
-  const agentsDir = join(getOriginalCwd(), '.claude', 'agents')
-  const skillsDir = join(getOriginalCwd(), '.claude', 'skills')
+  const dotDir = getProjectDotDir(getOriginalCwd())
+  const commandsDir = join(getOriginalCwd(), dotDir, 'commands')
+  const agentsDir = join(getOriginalCwd(), dotDir, 'agents')
+  const skillsDir = join(getOriginalCwd(), dotDir, 'skills')
 
   return (
     pathInWorkingPath(filePath, commandsDir) ||
@@ -457,7 +461,7 @@ function isDangerousFilePathToAutoEdit(path: string): boolean {
       // git worktrees), not a user-created dangerous directory. Skip the .claude
       // segment when it's followed by 'worktrees'. Any nested .claude directories
       // within the worktree (not followed by 'worktrees') are still blocked.
-      if (dir === '.claude') {
+      if (dir === '.claude' || dir === '.xclaw') {
         const nextSegment = pathSegments[i + 1]
         if (
           nextSegment &&
@@ -750,9 +754,12 @@ function rootPathForSource(source: PermissionRuleSource): string {
     case 'session':
       return expandPath(getOriginalCwd())
     case 'userSettings':
+    case 'xclawUserSettings':
     case 'policySettings':
     case 'projectSettings':
+    case 'xclawProjectSettings':
     case 'localSettings':
+    case 'xclawLocalSettings':
     case 'flagSettings':
       return getSettingsRootPathForSource(source)
   }
@@ -1594,7 +1601,9 @@ export function checkEditableInternalPath(
   // .claude/ only (not ~/.claude/) since launch.json is per-project.
   if (
     normalizeCaseForComparison(normalizedPath) ===
-    normalizeCaseForComparison(join(getOriginalCwd(), '.claude', 'launch.json'))
+    normalizeCaseForComparison(
+      join(getOriginalCwd(), getProjectDotDir(getOriginalCwd()), 'launch.json'),
+    )
   ) {
     return {
       behavior: 'allow',

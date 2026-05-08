@@ -38,6 +38,24 @@ export function optionForPermissionSaveDestination(saveDestination: EditableSett
         description: `Saved in at ~/.claude/settings.json`,
         value: saveDestination,
       };
+    case 'xclawLocalSettings':
+      return {
+        label: 'Xclaw project settings (local)',
+        description: `Saved in ${getRelativeSettingsFilePathForSource('xclawLocalSettings')}`,
+        value: saveDestination,
+      };
+    case 'xclawProjectSettings':
+      return {
+        label: 'Xclaw project settings',
+        description: `Checked in at ${getRelativeSettingsFilePathForSource('xclawProjectSettings')}`,
+        value: saveDestination,
+      };
+    case 'xclawUserSettings':
+      return {
+        label: 'Xclaw user settings',
+        description: `Saved in ~/.xclaw/settings.json`,
+        value: saveDestination,
+      };
   }
 }
 

@@ -76,8 +76,11 @@ export function SkillsMenu({ onExit, commands }: Props): React.ReactNode {
     const groups: Record<SkillSource, SkillCommand[]> = {
       policySettings: [],
       userSettings: [],
+      xclawUserSettings: [],
       projectSettings: [],
+      xclawProjectSettings: [],
       localSettings: [],
+      xclawLocalSettings: [],
       flagSettings: [],
       plugin: [],
       mcp: [],

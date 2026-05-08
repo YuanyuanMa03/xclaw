@@ -12,7 +12,12 @@ import { getRemoteManagedSettingsSyncFromCache } from '../../services/remoteMana
 import { uniq } from '../array.js'
 import { logForDebugging } from '../debug.js'
 import { logForDiagnosticsNoPII } from '../diagLogs.js'
-import { getClaudeConfigHomeDir, isEnvTruthy } from '../envUtils.js'
+import {
+  getClaudeConfigHomeDir,
+  getProjectDotDir,
+  getXclawConfigHomeDir,
+  isEnvTruthy,
+} from '../envUtils.js'
 import { getErrnoCode, isENOENT } from '../errors.js'
 import { writeFileSyncAndFlush_DEPRECATED } from '../file.js'
 import { readFileSync } from '../fileRead.js'
@@ -240,9 +245,13 @@ export function getSettingsRootPathForSource(source: SettingSource): string {
   switch (source) {
     case 'userSettings':
       return resolve(getClaudeConfigHomeDir())
+    case 'xclawUserSettings':
+      return resolve(getXclawConfigHomeDir())
     case 'policySettings':
     case 'projectSettings':
-    case 'localSettings': {
+    case 'localSettings':
+    case 'xclawProjectSettings':
+    case 'xclawLocalSettings': {
       return resolve(getOriginalCwd())
     }
     case 'flagSettings': {
@@ -280,8 +289,12 @@ export function getSettingsFilePathForSource(
         getSettingsRootPathForSource(source),
         getUserSettingsFilePath(),
       )
+    case 'xclawUserSettings':
+      return join(getXclawConfigHomeDir(), 'settings.json')
     case 'projectSettings':
-    case 'localSettings': {
+    case 'localSettings':
+    case 'xclawProjectSettings':
+    case 'xclawLocalSettings': {
       return join(
         getSettingsRootPathForSource(source),
         getRelativeSettingsFilePathForSource(source),
@@ -296,13 +309,22 @@ export function getSettingsFilePathForSource(
 }
 
 export function getRelativeSettingsFilePathForSource(
-  source: 'projectSettings' | 'localSettings',
+  source:
+    | 'projectSettings'
+    | 'localSettings'
+    | 'xclawProjectSettings'
+    | 'xclawLocalSettings',
 ): string {
+  const dotDir = getProjectDotDir(getOriginalCwd())
   switch (source) {
     case 'projectSettings':
-      return join('.claude', 'settings.json')
+      return join(dotDir, 'settings.json')
     case 'localSettings':
-      return join('.claude', 'settings.local.json')
+      return join(dotDir, 'settings.local.json')
+    case 'xclawProjectSettings':
+      return join('.xclaw', 'settings.json')
+    case 'xclawLocalSettings':
+      return join('.xclaw', 'settings.local.json')
   }
 }
 

@@ -62,8 +62,10 @@ function getAgentDirectoryPath(location: SettingSource): string {
     case 'flagSettings':
       throw new Error(`Cannot get directory path for ${location} agents`)
     case 'userSettings':
+    case 'xclawUserSettings':
       return join(getClaudeConfigHomeDir(), AGENT_PATHS.AGENTS_DIR)
     case 'projectSettings':
+    case 'xclawProjectSettings':
       return join(getCwd(), AGENT_PATHS.FOLDER_NAME, AGENT_PATHS.AGENTS_DIR)
     case 'policySettings':
       return join(
@@ -72,6 +74,7 @@ function getAgentDirectoryPath(location: SettingSource): string {
         AGENT_PATHS.AGENTS_DIR,
       )
     case 'localSettings':
+    case 'xclawLocalSettings':
       return join(getCwd(), AGENT_PATHS.FOLDER_NAME, AGENT_PATHS.AGENTS_DIR)
   }
 }

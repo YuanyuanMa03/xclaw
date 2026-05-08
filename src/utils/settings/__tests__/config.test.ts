@@ -270,14 +270,33 @@ describe('MCP server entry type guards', () => {
 // ─── Constants ──────────────────────────────────────────────────────────
 
 describe('SETTING_SOURCES', () => {
-  test('contains all five sources in order', () => {
+  test('contains all sources in order', () => {
     expect(SETTING_SOURCES).toEqual([
       'userSettings',
+      'xclawUserSettings',
       'projectSettings',
+      'xclawProjectSettings',
       'localSettings',
+      'xclawLocalSettings',
       'flagSettings',
       'policySettings',
     ])
+  })
+
+  test('xclaw sources come after their Claude counterparts', () => {
+    const sources = Array.from(SETTING_SOURCES)
+    const userIdx = sources.indexOf('userSettings')
+    const xclawUserIdx = sources.indexOf('xclawUserSettings')
+    const projIdx = sources.indexOf('projectSettings')
+    const xclawProjIdx = sources.indexOf('xclawProjectSettings')
+    const localIdx = sources.indexOf('localSettings')
+    const xclawLocalIdx = sources.indexOf('xclawLocalSettings')
+
+    expect(xclawUserIdx).toBeGreaterThan(userIdx)
+    expect(xclawProjIdx).toBeGreaterThan(projIdx)
+    expect(xclawLocalIdx).toBeGreaterThan(localIdx)
+    expect(xclawUserIdx).toBeLessThan(projIdx)
+    expect(xclawProjIdx).toBeLessThan(localIdx)
   })
 })
 
@@ -317,6 +336,20 @@ describe('getSettingSourceName', () => {
   test('maps policySettings to managed', () => {
     expect(getSettingSourceName('policySettings')).toBe('managed')
   })
+
+  test('maps xclawUserSettings to xclaw user', () => {
+    expect(getSettingSourceName('xclawUserSettings')).toBe('xclaw user')
+  })
+
+  test('maps xclawProjectSettings to xclaw project', () => {
+    expect(getSettingSourceName('xclawProjectSettings')).toBe('xclaw project')
+  })
+
+  test('maps xclawLocalSettings to xclaw project, gitignored', () => {
+    expect(getSettingSourceName('xclawLocalSettings')).toBe(
+      'xclaw project, gitignored',
+    )
+  })
 })
 
 describe('getSourceDisplayName', () => {
@@ -330,6 +363,18 @@ describe('getSourceDisplayName', () => {
 
   test('maps built-in to Built-in', () => {
     expect(getSourceDisplayName('built-in')).toBe('Built-in')
+  })
+
+  test('maps xclawUserSettings to Xclaw User', () => {
+    expect(getSourceDisplayName('xclawUserSettings')).toBe('Xclaw User')
+  })
+
+  test('maps xclawProjectSettings to Xclaw Project', () => {
+    expect(getSourceDisplayName('xclawProjectSettings')).toBe('Xclaw Project')
+  })
+
+  test('maps xclawLocalSettings to Xclaw Local', () => {
+    expect(getSourceDisplayName('xclawLocalSettings')).toBe('Xclaw Local')
   })
 })
 
