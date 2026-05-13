@@ -44,11 +44,13 @@ export function createWhatsNewFeed(releaseNotes: string[]): FeedConfig {
     };
   });
 
-  const emptyMessage =
-    process.env.USER_TYPE === 'ant' ? 'Unable to fetch latest commits' : 'Check the xclaw changelog for updates';
+  const emptyMessage = process.env.USER_TYPE === 'ant' ? 'Unable to fetch latest commits' : 'No recent updates';
+
+  // xclaw is based on Claude Code - show upstream updates with attribution
+  const title = "What's new (Claude Code upstream)";
 
   return {
-    title: process.env.USER_TYPE === 'ant' ? "What's new [ANT-ONLY: Latest CC commits]" : "What's new",
+    title,
     lines,
     footer: lines.length > 0 ? '/release-notes for more' : undefined,
     emptyMessage,
